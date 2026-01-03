@@ -250,23 +250,181 @@ const raidRotations = calendarDataset.filter(
             </p>
           </div>
 
+          <!-- Filtros Section -->
+          <div
+            class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6"
+          >
+            <!-- Search Bar -->
+            <div class="mb-6">
+              <div class="relative">
+                <input
+                  type="text"
+                  id="event-search"
+                  placeholder="Buscar eventos por nombre, Pokémon, movimiento..."
+                  class="w-full px-4 py-3 pl-12 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all"
+                />
+                <svg
+                  class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Filter by Category -->
+            <div class="mb-4">
+              <h3
+                class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3"
+              >
+                Filtrar por Categoría
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  class="filter-category-btn filter-all active px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="all"
+                >
+                  Todos
+                </button>
+                <button
+                  class="filter-category-btn filter-community-day px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="COMMUNITY_DAY"
+                >
+                  Community Day
+                </button>
+                <button
+                  class="filter-category-btn filter-raid-day px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="RAID_DAY"
+                >
+                  Raid Day
+                </button>
+                <button
+                  class="filter-category-btn filter-event px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="EVENT"
+                >
+                  Evento
+                </button>
+                <button
+                  class="filter-category-btn filter-spotlight px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="SPOTLIGHT"
+                >
+                  Spotlight
+                </button>
+                <button
+                  class="filter-category-btn filter-raid-hour px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="RAID_HOUR"
+                >
+                  Raid Hour
+                </button>
+                <button
+                  class="filter-category-btn filter-max-monday px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="MAX_MONDAY"
+                >
+                  Max Monday
+                </button>
+                <button
+                  class="filter-category-btn filter-pvp px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="PVP"
+                >
+                  PVP
+                </button>
+                <button
+                  class="filter-category-btn filter-go-pass px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-category="GO_PASS"
+                >
+                  GO Pass
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter by Status -->
+            <div class="mb-4">
+              <h3
+                class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3"
+              >
+                Filtrar por Estado
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  class="filter-status-btn filter-status-all active px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-status="all"
+                >
+                  Todos
+                </button>
+                <button
+                  class="filter-status-btn filter-status-confirmed px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-status="CONFIRMED"
+                >
+                  ✓ Confirmado
+                </button>
+                <button
+                  class="filter-status-btn filter-status-tentative px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-status="TENTATIVE"
+                >
+                  ⚠ Tentativo
+                </button>
+                <button
+                  class="filter-status-btn filter-status-tbd px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all"
+                  data-status="TBD"
+                >
+                  ? Por Definir
+                </button>
+              </div>
+            </div>
+
+            <!-- Results Counter -->
+            <div
+              class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700"
+            >
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Mostrando <span
+                  id="filtered-count"
+                  class="font-bold text-blue-600 dark:text-blue-400">0</span
+                > de <span id="total-count" class="font-bold">0</span> eventos
+              </p>
+              <button
+                id="clear-filters-btn"
+                class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+              >
+                Limpiar filtros
+              </button>
+            </div>
+          </div>
+
           {
             activeEvents.length > 0 && (
-              <div class="mb-10 sm:mb-12">
+              <div
+                class="mb-10 sm:mb-12 events-container"
+                data-section="active"
+              >
                 <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center">
                   <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse" />
                   Eventos Activos
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 events-grid">
                   {activeEvents.map((event) => (
-                    <EventCard event={event} />
+                    <div
+                      class="event-card-wrapper"
+                      data-event-category={event.category}
+                      data-event-status={event.status}
+                      data-event-title={event.title.toLowerCase()}
+                      data-event-data={JSON.stringify(event)}
+                    >
+                      <EventCard event={event} />
+                    </div>
                   ))}
                 </div>
               </div>
             )
           }
 
-          <div>
+          <div class="events-container" data-section="upcoming">
             <h3
               class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center"
             >
@@ -284,9 +442,48 @@ const raidRotations = calendarDataset.filter(
               </svg>
               Próximos Eventos
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcomingEvents.map((event) => <EventCard event={event} />)}
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 events-grid"
+            >
+              {
+                upcomingEvents.map((event) => (
+                  <div
+                    class="event-card-wrapper"
+                    data-event-category={event.category}
+                    data-event-status={event.status}
+                    data-event-title={event.title.toLowerCase()}
+                    data-event-data={JSON.stringify(event)}
+                  >
+                    <EventCard event={event} />
+                  </div>
+                ))
+              }
             </div>
+          </div>
+
+          <!-- No Results Message -->
+          <div id="no-results" class="hidden text-center py-12">
+            <svg
+              class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            <h3
+              class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2"
+            >
+              No se encontraron eventos
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400">
+              Intenta ajustar los filtros o la búsqueda
+            </p>
           </div>
         </div>
       </div>
@@ -557,6 +754,185 @@ const raidRotations = calendarDataset.filter(
 </Layout>
 
 <script>
+  // ============================================
+  // EVENT FILTERS FUNCTIONALITY
+  // ============================================
+  function initEventFilters() {
+    let currentCategoryFilter = "all";
+    let currentStatusFilter = "all";
+    let currentSearchQuery = "";
+
+    // Get all event cards
+    const eventCards = document.querySelectorAll(".event-card-wrapper");
+    const totalCount = eventCards.length;
+    const totalCountEl = document.getElementById("total-count");
+    const filteredCountEl = document.getElementById("filtered-count");
+    const noResultsEl = document.getElementById("no-results");
+
+    // Get filter buttons
+    const categoryButtons = document.querySelectorAll(".filter-category-btn");
+    const statusButtons = document.querySelectorAll(".filter-status-btn");
+    const searchInput = document.getElementById(
+      "event-search"
+    ) as HTMLInputElement;
+    const clearFiltersBtn = document.getElementById("clear-filters-btn");
+
+    // Set initial counts
+    if (totalCountEl) totalCountEl.textContent = totalCount.toString();
+    if (filteredCountEl) filteredCountEl.textContent = totalCount.toString();
+
+    // Filter function
+    function applyFilters() {
+      let visibleCount = 0;
+
+      eventCards.forEach((card) => {
+        const category = card.getAttribute("data-event-category") || "";
+        const status = card.getAttribute("data-event-status") || "";
+        const title = card.getAttribute("data-event-title") || "";
+        const eventData = card.getAttribute("data-event-data") || "{}";
+
+        let eventFullText = title;
+        try {
+          const data = JSON.parse(eventData);
+          // Include spawns, raids, bonuses, etc in search
+          if (data.spawns) eventFullText += " " + data.spawns.join(" ");
+          if (data.raids) eventFullText += " " + data.raids.join(" ");
+          if (data.bonuses) eventFullText += " " + data.bonuses.join(" ");
+          if (data.featuredMoves)
+            eventFullText += " " + data.featuredMoves.join(" ");
+          if (data.description) eventFullText += " " + data.description;
+          eventFullText = eventFullText.toLowerCase();
+        } catch (e) {
+          // Continue with just title
+        }
+
+        // Check filters
+        const matchesCategory =
+          currentCategoryFilter === "all" || category === currentCategoryFilter;
+        const matchesStatus =
+          currentStatusFilter === "all" || status === currentStatusFilter;
+        const matchesSearch =
+          currentSearchQuery === "" ||
+          eventFullText.includes(currentSearchQuery.toLowerCase());
+
+        const shouldShow = matchesCategory && matchesStatus && matchesSearch;
+
+        if (shouldShow) {
+          card.classList.remove("hidden");
+          visibleCount++;
+        } else {
+          card.classList.add("hidden");
+        }
+      });
+
+      // Update count
+      if (filteredCountEl)
+        filteredCountEl.textContent = visibleCount.toString();
+
+      // Show/hide no results message
+      if (noResultsEl) {
+        if (visibleCount === 0) {
+          noResultsEl.classList.remove("hidden");
+        } else {
+          noResultsEl.classList.add("hidden");
+        }
+      }
+
+      // Show/hide section titles if all events in a section are hidden
+      const sections = document.querySelectorAll(".events-container");
+      sections.forEach((section) => {
+        const sectionCards = section.querySelectorAll(
+          ".event-card-wrapper:not(.hidden)"
+        );
+        if (sectionCards.length === 0) {
+          section.classList.add("hidden");
+        } else {
+          section.classList.remove("hidden");
+        }
+      });
+    }
+
+    // Category filter buttons
+    categoryButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // Update active state
+        categoryButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Update filter
+        currentCategoryFilter = btn.getAttribute("data-category") || "all";
+        applyFilters();
+      });
+    });
+
+    // Status filter buttons
+    statusButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // Update active state
+        statusButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Update filter
+        currentStatusFilter = btn.getAttribute("data-status") || "all";
+        applyFilters();
+      });
+    });
+
+    // Search input
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        currentSearchQuery = (e.target as HTMLInputElement).value;
+        applyFilters();
+      });
+    }
+
+    // Clear filters button
+    if (clearFiltersBtn) {
+      clearFiltersBtn.addEventListener("click", () => {
+        // Reset filters
+        currentCategoryFilter = "all";
+        currentStatusFilter = "all";
+        currentSearchQuery = "";
+
+        // Reset UI
+        categoryButtons.forEach((btn) => {
+          if (btn.getAttribute("data-category") === "all") {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+
+        statusButtons.forEach((btn) => {
+          if (btn.getAttribute("data-status") === "all") {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+
+        if (searchInput) {
+          searchInput.value = "";
+        }
+
+        applyFilters();
+      });
+    }
+  }
+
+  // Initialize filters
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initEventFilters);
+  } else {
+    initEventFilters();
+  }
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener("astro:page-load", initEventFilters);
+
+  // ============================================
+  // EXISTING EVENT CLICK HANDLERS
+  // ============================================
   // Agregar click listeners a los eventos semanales y tarjetas
   document.addEventListener("DOMContentLoaded", () => {
     // Eventos semanales (Spotlight, Raid Hours, Max Monday)
@@ -621,5 +997,277 @@ const raidRotations = calendarDataset.filter(
   .animation-delay-400 {
     animation-delay: 0.4s;
     animation-fill-mode: backwards;
+  }
+
+  /* Filter Button Styles */
+  .filter-category-btn,
+  .filter-status-btn {
+    background: #f3f4f6;
+    color: #374151;
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+
+  .dark .filter-category-btn,
+  .dark .filter-status-btn {
+    background: #374151;
+    color: #e5e7eb;
+  }
+
+  .filter-category-btn:hover,
+  .filter-status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Category-specific colors matching event cards */
+  .filter-community-day {
+    background: #10b981;
+    color: white;
+  }
+
+  .dark .filter-community-day {
+    background: #10b981;
+    color: white;
+  }
+
+  .filter-community-day:hover {
+    background: #059669;
+  }
+
+  .filter-raid-day {
+    background: #ef4444;
+    color: white;
+  }
+
+  .dark .filter-raid-day {
+    background: #ef4444;
+    color: white;
+  }
+
+  .filter-raid-day:hover {
+    background: #dc2626;
+  }
+
+  .filter-event {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .dark .filter-event {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .filter-event:hover {
+    background: #2563eb;
+  }
+
+  .filter-spotlight {
+    background: #eab308;
+    color: white;
+  }
+
+  .dark .filter-spotlight {
+    background: #eab308;
+    color: white;
+  }
+
+  .filter-spotlight:hover {
+    background: #ca8a04;
+  }
+
+  .filter-raid-hour {
+    background: #a855f7;
+    color: white;
+  }
+
+  .dark .filter-raid-hour {
+    background: #a855f7;
+    color: white;
+  }
+
+  .filter-raid-hour:hover {
+    background: #9333ea;
+  }
+
+  .filter-max-monday {
+    background: #ec4899;
+    color: white;
+  }
+
+  .dark .filter-max-monday {
+    background: #ec4899;
+    color: white;
+  }
+
+  .filter-max-monday:hover {
+    background: #db2777;
+  }
+
+  .filter-pvp {
+    background: #6366f1;
+    color: white;
+  }
+
+  .dark .filter-pvp {
+    background: #6366f1;
+    color: white;
+  }
+
+  .filter-pvp:hover {
+    background: #4f46e5;
+  }
+
+  .filter-go-pass {
+    background: #14b8a6;
+    color: white;
+  }
+
+  .dark .filter-go-pass {
+    background: #14b8a6;
+    color: white;
+  }
+
+  .filter-go-pass:hover {
+    background: #0d9488;
+  }
+
+  /* Active state - adds ring and shadow */
+  .filter-category-btn.active {
+    box-shadow:
+      0 0 0 3px rgba(255, 255, 255, 0.3),
+      0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px) scale(1.05);
+    font-weight: 700;
+  }
+
+  /* "Todos" button styles */
+  .filter-all {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+  }
+
+  .dark .filter-all {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+  }
+
+  .filter-all:hover {
+    background: linear-gradient(to right, #2563eb, #7c3aed);
+  }
+
+  .filter-all.active {
+    box-shadow:
+      0 0 0 3px rgba(139, 92, 246, 0.3),
+      0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Status button styles */
+  .filter-status-all {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+  }
+
+  .dark .filter-status-all {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+  }
+
+  .filter-status-all:hover {
+    background: linear-gradient(to right, #2563eb, #7c3aed);
+  }
+
+  .filter-status-all.active {
+    box-shadow:
+      0 0 0 3px rgba(139, 92, 246, 0.3),
+      0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px) scale(1.05);
+    font-weight: 700;
+  }
+
+  /* Confirmado - Verde */
+  .filter-status-confirmed {
+    background: #10b981;
+    color: white;
+  }
+
+  .dark .filter-status-confirmed {
+    background: #10b981;
+    color: white;
+  }
+
+  .filter-status-confirmed:hover {
+    background: #059669;
+  }
+
+  .filter-status-confirmed.active {
+    box-shadow:
+      0 0 0 3px rgba(16, 185, 129, 0.3),
+      0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px) scale(1.05);
+    font-weight: 700;
+  }
+
+  /* Tentativo - Amarillo */
+  .filter-status-tentative {
+    background: #eab308;
+    color: white;
+  }
+
+  .dark .filter-status-tentative {
+    background: #eab308;
+    color: white;
+  }
+
+  .filter-status-tentative:hover {
+    background: #ca8a04;
+  }
+
+  .filter-status-tentative.active {
+    box-shadow:
+      0 0 0 3px rgba(234, 179, 8, 0.3),
+      0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px) scale(1.05);
+    font-weight: 700;
+  }
+
+  /* Por Definir - Gris */
+  .filter-status-tbd {
+    background: #6b7280;
+    color: white;
+  }
+
+  .dark .filter-status-tbd {
+    background: #6b7280;
+    color: white;
+  }
+
+  .filter-status-tbd:hover {
+    background: #4b5563;
+  }
+
+  .filter-status-tbd.active {
+    box-shadow:
+      0 0 0 3px rgba(107, 114, 128, 0.3),
+      0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px) scale(1.05);
+    font-weight: 700;
+  }
+
+  /* Smooth transitions for hiding/showing cards */
+  .event-card-wrapper {
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .event-card-wrapper.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
 </style>

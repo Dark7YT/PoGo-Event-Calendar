@@ -113,19 +113,30 @@ function getEventColor(category: EventCategory) {
   <!-- Vista de LISTA para móviles (oculta en desktop) -->
   <div class="md:hidden mobile-list-view">
     {
-      daysInMonth.map((day) => {
+      daysInMonth.map((day, index) => {
         const dayEvents = getEventsForDay(day);
         if (dayEvents.length === 0) return null;
 
         const isCurrentDay = isToday(day);
 
+        // Contar cuántos días con eventos hay antes de este
+        const daysWithEventsBefore = daysInMonth
+          .slice(0, index)
+          .filter((d) => getEventsForDay(d).length > 0).length;
+
+        // Mostrar solo los primeros 4 días con eventos inicialmente
+        const isInitiallyHidden = daysWithEventsBefore >= 4;
+
         return (
           <div
-            class={`mb-4 p-4 rounded-lg border-2 ${
+            class={`mobile-day-item mb-4 p-4 rounded-lg border-2 transition-all duration-300 ${
+              isInitiallyHidden ? "hidden" : ""
+            } ${
               isCurrentDay
                 ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                 : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50"
             }`}
+            data-initially-hidden={isInitiallyHidden}
           >
             <div class="flex items-center justify-between mb-3">
               <h3
@@ -169,6 +180,46 @@ function getEventColor(category: EventCategory) {
         );
       })
     }
+
+    <!-- Botón "Ver más" para mostrar todos los días -->
+    <button
+      id="mobile-show-more-btn"
+      class="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 group"
+    >
+      <span>Ver más días</span>
+      <svg
+        class="w-5 h-5 transform group-hover:translate-y-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </button>
+
+    <!-- Botón "Ver menos" (inicialmente oculto) -->
+    <button
+      id="mobile-show-less-btn"
+      class="hidden w-full py-4 px-6 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 items-center justify-center gap-2 group mt-4"
+    >
+      <span>Ver menos</span>
+      <svg
+        class="w-5 h-5 transform group-hover:-translate-y-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 15l7-7 7 7"></path>
+      </svg>
+    </button>
   </div>
 
   <!-- Vista de GRID para tablet/desktop (oculta en móvil) -->
@@ -452,6 +503,64 @@ function getEventColor(category: EventCategory) {
         }
       });
     });
+
+    // Manejar botones "Ver más" y "Ver menos" en móvil
+    const showMoreBtn = document.getElementById("mobile-show-more-btn");
+    const showLessBtn = document.getElementById("mobile-show-less-btn");
+    const hiddenDays = document.querySelectorAll(
+      '.mobile-day-item[data-initially-hidden="true"]'
+    );
+
+    // Solo mostrar el botón "Ver más" si hay días ocultos
+    if (showMoreBtn && hiddenDays.length > 0) {
+      showMoreBtn.style.display = "flex";
+
+      showMoreBtn.addEventListener("click", () => {
+        hiddenDays.forEach((day) => {
+          day.classList.remove("hidden");
+          day.classList.add("animate-fade-in");
+        });
+        showMoreBtn.style.display = "none";
+        if (showLessBtn) {
+          showLessBtn.style.display = "flex";
+        }
+
+        // Scroll suave hacia el primer día revelado
+        setTimeout(() => {
+          if (hiddenDays[0]) {
+            hiddenDays[0].scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+            });
+          }
+        }, 100);
+      });
+    } else if (showMoreBtn) {
+      // Si no hay días ocultos, ocultar el botón "Ver más"
+      showMoreBtn.style.display = "none";
+    }
+
+    if (showLessBtn) {
+      showLessBtn.addEventListener("click", () => {
+        hiddenDays.forEach((day) => {
+          day.classList.add("hidden");
+          day.classList.remove("animate-fade-in");
+        });
+        showLessBtn.style.display = "none";
+        if (showMoreBtn) {
+          showMoreBtn.style.display = "flex";
+        }
+
+        // Scroll suave hacia arriba del calendario
+        const mobileListView = document.querySelector(".mobile-list-view");
+        if (mobileListView) {
+          mobileListView.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      });
+    }
   }
 
   // Ejecutar inmediatamente
