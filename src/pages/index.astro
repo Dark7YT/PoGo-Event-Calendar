@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Calendar from "../components/Calendar.astro";
 import EventCard from "../components/EventCard.astro";
 import EventModal from "../components/EventModal.astro";
+import CalendarExport from "../components/CalendarExport.astro";
 import {
   calendarDataset,
   getEventsByCategory,
@@ -1275,3 +1276,6 @@ const raidRotations = calendarDataset.filter(
     overflow: hidden;
   }
 </style>
+
+<!-- Calendar Export Modal -->
+<CalendarExport />
