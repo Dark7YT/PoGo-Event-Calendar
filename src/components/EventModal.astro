@@ -122,18 +122,18 @@
   // Helper functions para obtener clases completas de Tailwind (no dinámicas)
   function getBorderClasses(color: string): string {
     const classes: Record<string, string> = {
-      emerald: "border-emerald-200 dark:border-emerald-800",
-      red: "border-red-200 dark:border-red-800",
-      rose: "border-rose-200 dark:border-rose-800",
-      purple: "border-purple-200 dark:border-purple-800",
-      orange: "border-orange-200 dark:border-orange-800",
-      sky: "border-sky-200 dark:border-sky-800",
-      slate: "border-slate-200 dark:border-slate-800",
-      teal: "border-teal-200 dark:border-teal-800",
-      blue: "border-blue-200 dark:border-blue-800",
-      fuchsia: "border-fuchsia-200 dark:border-fuchsia-800",
-      amber: "border-amber-200 dark:border-amber-800",
-      gray: "border-gray-200 dark:border-gray-800",
+      emerald: "border-green-500",
+      red: "border-red-500",
+      rose: "border-rose-500",
+      purple: "border-purple-500",
+      orange: "border-orange-500",
+      sky: "border-pink-500",
+      slate: "border-slate-600",
+      teal: "border-teal-500",
+      blue: "border-blue-500",
+      fuchsia: "border-cyan-500",
+      amber: "border-yellow-500",
+      gray: "border-gray-500",
     };
     return classes[color] || classes.gray;
   }

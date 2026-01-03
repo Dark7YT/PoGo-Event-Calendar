@@ -47,6 +47,25 @@ function getEventCategoryColor(category: EventCategory) {
   return colors[category] || "bg-gray-500";
 }
 
+function getEventCategoryBorder(category: EventCategory) {
+  const borders: Record<EventCategory, string> = {
+    COMMUNITY_DAY: "border-green-500",
+    RAID_DAY: "border-red-500",
+    EVENT: "border-blue-500",
+    SPOTLIGHT: "border-yellow-500",
+    RAID_HOUR: "border-purple-500",
+    MAX_MONDAY: "border-pink-500",
+    PVP: "border-indigo-500",
+    GO_PASS: "border-teal-500",
+    RAID_ROTATION: "border-orange-500",
+    MEGA_ROTATION: "border-cyan-500",
+    SHADOW_ROTATION: "border-slate-600",
+    RESEARCH: "border-yellow-500",
+    OTHER: "border-gray-500",
+  };
+  return borders[category] || "border-gray-500";
+}
+
 function getStatusBadge(status: string) {
   const badges = {
     CONFIRMED: {
@@ -77,7 +96,7 @@ const statusBadge = getStatusBadge(event.status);
 ---
 
 <article
-  class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-[1.02] flex flex-col h-full"
+  class={`bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-[1.02] flex flex-col h-full border-2 ${getEventCategoryBorder(event.category)}`}
   data-event-id={event.id}
 >
   <!-- Header con tipo de evento -->

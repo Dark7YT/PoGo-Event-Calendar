@@ -57,465 +57,437 @@
 
     <!-- Content -->
     <div
-      class="overflow-y-auto max-h-[calc(95vh-120px)] sm:max-h-[calc(90vh-160px)] p-4 sm:p-6 pb-6"
+      class="overflow-y-auto max-h-[calc(95vh-200px)] sm:max-h-[calc(90vh-240px)] p-4 sm:p-6"
     >
       <!-- Device Info -->
       <div
         class="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg"
       >
-        <div class="flex items-start gap-2 sm:gap-3">
-          <svg
-            class="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
+        <!-- Search and Filters -->
+        <div class="mb-6 space-y-4">
           <div>
-            <p class="text-sm font-semibold text-blue-900 dark:text-blue-100">
-              Detectamos tu dispositivo: <span id="device-type"></span>
-            </p>
-            <p
-              class="text-xs text-blue-700 dark:text-blue-300 mt-1"
-              id="device-instructions"
+            <label
+              for="export-search"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
-              Los eventos se agregarán automáticamente a tu calendario
-            </p>
+              🔍 Buscar eventos
+            </label>
+            <input
+              type="text"
+              id="export-search"
+              placeholder="Buscar por nombre, Pokémon, tipo de evento..."
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div class="flex flex-col sm:flex-row flex-wrap gap-2">
+            <button
+              id="select-all-btn"
+              class="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto"
+            >
+              ✓ Seleccionar Todo
+            </button>
+            <button
+              id="deselect-all-btn"
+              class="px-3 sm:px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto"
+            >
+              ✗ Deseleccionar Todo
+            </button>
+            <button
+              id="select-category-btn"
+              class="px-3 sm:px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto"
+            >
+              🎯 Seleccionar por Categoría
+            </button>
+          </div>
+        </div>
+
+        <!-- Category Selection (Initially Hidden) -->
+        <div
+          id="category-selection"
+          class="hidden mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+        >
+          <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Seleccionar por categoría:
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="COMMUNITY_DAY"
+            >
+              Community Day
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="EVENT"
+            >
+              Eventos
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="RAID_DAY"
+            >
+              Raid Days
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="SPOTLIGHT"
+            >
+              Spotlight Hours
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="RAID_HOUR"
+            >
+              Raid Hours
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="MAX_MONDAY"
+            >
+              Max Monday
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="GO_PASS"
+            >
+              GO Pass
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-red-700 hover:bg-red-800 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="RAID_ROTATION"
+            >
+              Rotaciones 5★
+            </button>
+            <button
+              class="category-filter-btn px-3 py-1.5 bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-lg text-xs font-medium transition-colors"
+              data-category="MEGA_ROTATION"
+            >
+              Rotaciones Mega
+            </button>
+          </div>
+        </div>
+
+        <!-- Event List -->
+        <div class="space-y-2 mb-4">
+          <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Selecciona los eventos que deseas agregar (<span id="selected-count"
+              >0</span
+            > seleccionados):
+          </p>
+          <div
+            id="export-events-list"
+            class="space-y-2 max-h-[65vh] sm:max-h-[60vh] overflow-y-auto"
+          >
+            <!-- Los eventos se cargarán dinámicamente -->
           </div>
         </div>
       </div>
 
-      <!-- Search and Filters -->
-      <div class="mb-6 space-y-4">
-        <div>
-          <label
-            for="export-search"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >
-            🔍 Buscar eventos
-          </label>
-          <input
-            type="text"
-            id="export-search"
-            placeholder="Buscar por nombre, Pokémon, tipo de evento..."
-            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
-        <div class="flex flex-col sm:flex-row flex-wrap gap-2">
-          <button
-            id="select-all-btn"
-            class="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto"
-          >
-            ✓ Seleccionar Todo
-          </button>
-          <button
-            id="deselect-all-btn"
-            class="px-3 sm:px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto"
-          >
-            ✗ Deseleccionar Todo
-          </button>
-          <button
-            id="select-category-btn"
-            class="px-3 sm:px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto"
-          >
-            🎯 Seleccionar por Categoría
-          </button>
-        </div>
-      </div>
-
-      <!-- Category Selection (Initially Hidden) -->
+      <!-- Footer -->
       <div
-        id="category-selection"
-        class="hidden mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+        class="sticky bottom-0 bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 dark:border-gray-600 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4"
       >
-        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-          Seleccionar por categoría:
+        <p
+          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center sm:text-left"
+        >
+          <span id="footer-selected-count">0</span> eventos seleccionados
         </p>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <button
-            class="category-filter-btn px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="COMMUNITY_DAY"
+            id="cancel-export-btn"
+            class="px-4 sm:px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-colors order-2 sm:order-1"
           >
-            Community Day
+            Cancelar
           </button>
           <button
-            class="category-filter-btn px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="EVENT"
+            id="export-events-btn"
+            class="px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 order-1 sm:order-2"
+            disabled
           >
-            Eventos
-          </button>
-          <button
-            class="category-filter-btn px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="RAID_DAY"
-          >
-            Raid Days
-          </button>
-          <button
-            class="category-filter-btn px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="SPOTLIGHT"
-          >
-            Spotlight Hours
-          </button>
-          <button
-            class="category-filter-btn px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="RAID_HOUR"
-          >
-            Raid Hours
-          </button>
-          <button
-            class="category-filter-btn px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="MAX_MONDAY"
-          >
-            Max Monday
-          </button>
-          <button
-            class="category-filter-btn px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="GO_PASS"
-          >
-            GO Pass
-          </button>
-          <button
-            class="category-filter-btn px-3 py-1.5 bg-red-700 hover:bg-red-800 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="RAID_ROTATION"
-          >
-            Rotaciones 5★
-          </button>
-          <button
-            class="category-filter-btn px-3 py-1.5 bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-lg text-xs font-medium transition-colors"
-            data-category="MEGA_ROTATION"
-          >
-            Rotaciones Mega
+            📅 Exportar Eventos
           </button>
         </div>
-      </div>
-
-      <!-- Event List -->
-      <div class="space-y-2 mb-4">
-        <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-          Selecciona los eventos que deseas agregar (<span id="selected-count"
-            >0</span
-          > seleccionados):
-        </p>
-        <div
-          id="export-events-list"
-          class="space-y-2 max-h-[65vh] sm:max-h-[60vh] overflow-y-auto pb-4"
-        >
-          <!-- Los eventos se cargarán dinámicamente -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <div
-      class="sticky bottom-0 bg-gray-50 dark:bg-gray-700 px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 dark:border-gray-600 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4"
-    >
-      <p
-        class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center sm:text-left"
-      >
-        <span id="footer-selected-count">0</span> eventos seleccionados
-      </p>
-      <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-        <button
-          id="cancel-export-btn"
-          class="px-4 sm:px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-colors order-2 sm:order-1"
-        >
-          Cancelar
-        </button>
-        <button
-          id="export-events-btn"
-          class="px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg text-sm font-medium transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 order-1 sm:order-2"
-          disabled
-        >
-          📅 Exportar Eventos
-        </button>
       </div>
     </div>
   </div>
-</div>
 
-<style>
-  @keyframes modal-appear {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
+  <style>
+    @keyframes modal-appear {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
-    to {
-      opacity: 1;
-      transform: scale(1);
+
+    .animate-modal-appear {
+      animation: modal-appear 0.2s ease-out;
     }
-  }
 
-  .animate-modal-appear {
-    animation: modal-appear 0.2s ease-out;
-  }
-
-  #export-modal.show {
-    display: flex;
-  }
-
-  /* Prevenir scroll del body cuando el modal está abierto */
-  body.modal-open {
-    overflow: hidden;
-  }
-
-  .export-event-item {
-    transition: all 0.2s ease;
-  }
-
-  .export-event-item:hover {
-    transform: translateX(4px);
-  }
-
-  .export-event-item.selected {
-    background-color: rgb(219 234 254 / 0.5);
-    border-color: rgb(59 130 246);
-  }
-
-  .dark .export-event-item.selected {
-    background-color: rgb(30 58 138 / 0.3);
-    border-color: rgb(96 165 250);
-  }
-</style>
-
-<script>
-  import { getAllEvents, type Event } from "../data/events";
-  import { format, parseISO } from "date-fns";
-  import { es } from "date-fns/locale";
-
-  interface SelectedEvent {
-    event: Event;
-    selected: boolean;
-  }
-
-  let selectedEvents: Map<string, SelectedEvent> = new Map();
-  let allEvents: Event[] = [];
-
-  // Detectar tipo de dispositivo
-  function detectDevice(): { type: string; instructions: string } {
-    const userAgent = navigator.userAgent.toLowerCase();
-
-    if (/iphone|ipad|ipod/.test(userAgent)) {
-      return {
-        type: "iOS (iPhone/iPad)",
-        instructions:
-          "El archivo se descargará. Ábrelo para agregarlo a tu Calendario de Apple.",
-      };
-    } else if (/android/.test(userAgent)) {
-      return {
-        type: "Android",
-        instructions:
-          "El archivo se descargará. Ábrelo con Google Calendar u otra app de calendario.",
-      };
-    } else if (/windows/.test(userAgent) || /win32|win64/.test(userAgent)) {
-      return {
-        type: "Windows",
-        instructions:
-          "El archivo se descargará. Ábrelo con Outlook o la app Calendario de Windows.",
-      };
-    } else if (/macintosh|mac os x/.test(userAgent)) {
-      return {
-        type: "macOS",
-        instructions:
-          "El archivo se descargará. Ábrelo para agregarlo a tu Calendario de Apple.",
-      };
-    } else if (/linux/.test(userAgent)) {
-      return {
-        type: "Linux",
-        instructions:
-          "El archivo se descargará. Ábrelo con tu aplicación de calendario preferida.",
-      };
-    } else {
-      return {
-        type: "Navegador web",
-        instructions:
-          "El archivo se descargará en formato .ics, compatible con cualquier aplicación de calendario.",
-      };
+    #export-modal.show {
+      display: flex;
     }
-  }
 
-  // Generar archivo .ics (iCalendar format)
-  function generateICS(events: Event[]): string {
-    const lines: string[] = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//PoGo Calendar//Pokemon GO Events//ES",
-      "CALSCALE:GREGORIAN",
-      "METHOD:PUBLISH",
-      "X-WR-CALNAME:Pokémon GO - Eventos Enero 2026",
-      "X-WR-TIMEZONE:America/Lima",
-      "X-WR-CALDESC:Eventos de Pokémon GO para Enero 2026",
-    ];
+    /* Prevenir scroll del body cuando el modal está abierto */
+    body.modal-open {
+      overflow: hidden;
+    }
 
-    events.forEach((event) => {
-      const startDate = parseISO(event.start);
-      const endDate = parseISO(event.end);
+    .export-event-item {
+      transition: all 0.2s ease;
+    }
 
-      // Formato de fecha para .ics: YYYYMMDDTHHmmss
-      const formatICSDate = (date: Date): string => {
-        return format(date, "yyyyMMdd'T'HHmmss");
-      };
+    .export-event-item:hover {
+      transform: translateX(4px);
+    }
 
-      // Crear descripción detallada
-      const descriptionParts: string[] = [];
-      if (event.description) descriptionParts.push(event.description);
-      if (event.bonuses?.length) {
-        descriptionParts.push("\\n\\nBonificaciones:");
-        event.bonuses.forEach((b) => descriptionParts.push(`- ${b}`));
+    .export-event-item.selected {
+      background-color: rgb(219 234 254 / 0.5);
+      border-color: rgb(59 130 246);
+    }
+
+    .dark .export-event-item.selected {
+      background-color: rgb(30 58 138 / 0.3);
+      border-color: rgb(96 165 250);
+    }
+  </style>
+
+  <script>
+    import { getAllEvents, type Event } from "../data/events";
+    import { format, parseISO } from "date-fns";
+    import { es } from "date-fns/locale";
+
+    interface SelectedEvent {
+      event: Event;
+      selected: boolean;
+    }
+
+    let selectedEvents: Map<string, SelectedEvent> = new Map();
+    let allEvents: Event[] = [];
+
+    // Detectar tipo de dispositivo
+    function detectDevice(): { type: string; instructions: string } {
+      const userAgent = navigator.userAgent.toLowerCase();
+
+      if (/iphone|ipad|ipod/.test(userAgent)) {
+        return {
+          type: "iOS (iPhone/iPad)",
+          instructions:
+            "El archivo se descargará. Ábrelo para agregarlo a tu Calendario de Apple.",
+        };
+      } else if (/android/.test(userAgent)) {
+        return {
+          type: "Android",
+          instructions:
+            "El archivo se descargará. Ábrelo con Google Calendar u otra app de calendario.",
+        };
+      } else if (/windows/.test(userAgent) || /win32|win64/.test(userAgent)) {
+        return {
+          type: "Windows",
+          instructions:
+            "El archivo se descargará. Ábrelo con Outlook o la app Calendario de Windows.",
+        };
+      } else if (/macintosh|mac os x/.test(userAgent)) {
+        return {
+          type: "macOS",
+          instructions:
+            "El archivo se descargará. Ábrelo para agregarlo a tu Calendario de Apple.",
+        };
+      } else if (/linux/.test(userAgent)) {
+        return {
+          type: "Linux",
+          instructions:
+            "El archivo se descargará. Ábrelo con tu aplicación de calendario preferida.",
+        };
+      } else {
+        return {
+          type: "Navegador web",
+          instructions:
+            "El archivo se descargará en formato .ics, compatible con cualquier aplicación de calendario.",
+        };
       }
-      if (event.spawns?.length) {
-        descriptionParts.push("\\n\\nApariciones:");
-        descriptionParts.push(event.spawns.join(", "));
-      }
-      if (event.raids?.length) {
-        descriptionParts.push("\\n\\nIncursiones:");
-        event.raids.forEach((r) => descriptionParts.push(`- ${r}`));
-      }
-      if (event.debuts?.length) {
-        descriptionParts.push("\\n\\nDebuts:");
-        descriptionParts.push(event.debuts.join(", "));
-      }
-      if (event.notes) {
-        descriptionParts.push(`\\n\\nNota: ${event.notes}`);
-      }
+    }
 
-      const description = descriptionParts
-        .join("")
-        .replace(/\n/g, "\\n")
-        .replace(/,/g, "\\,");
+    // Generar archivo .ics (iCalendar format)
+    function generateICS(events: Event[]): string {
+      const lines: string[] = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//PoGo Calendar//Pokemon GO Events//ES",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "X-WR-CALNAME:Pokémon GO - Eventos Enero 2026",
+        "X-WR-TIMEZONE:America/Lima",
+        "X-WR-CALDESC:Eventos de Pokémon GO para Enero 2026",
+      ];
 
-      // Crear categoría basada en el tipo de evento
-      const categoryLabels: Record<string, string> = {
-        COMMUNITY_DAY: "Community Day",
-        RAID_DAY: "Raid Day",
-        EVENT: "Evento",
-        SPOTLIGHT: "Spotlight Hour",
-        RAID_HOUR: "Raid Hour",
-        MAX_MONDAY: "Max Monday",
-        GO_PASS: "GO Pass",
-        RAID_ROTATION: "Rotación Raids",
-        MEGA_ROTATION: "Rotación Mega",
-        SHADOW_ROTATION: "Shadow Raids",
-      };
+      events.forEach((event) => {
+        const startDate = parseISO(event.start);
+        const endDate = parseISO(event.end);
 
-      const category = categoryLabels[event.category] || "Pokémon GO";
+        // Formato de fecha para .ics: YYYYMMDDTHHmmss
+        const formatICSDate = (date: Date): string => {
+          return format(date, "yyyyMMdd'T'HHmmss");
+        };
 
-      lines.push("BEGIN:VEVENT");
-      lines.push(`UID:${event.id}@pogocalendar.com`);
-      lines.push(`DTSTAMP:${formatICSDate(new Date())}`);
-      lines.push(`DTSTART:${formatICSDate(startDate)}`);
-      lines.push(`DTEND:${formatICSDate(endDate)}`);
-      lines.push(`SUMMARY:${event.title}`);
-      lines.push(`DESCRIPTION:${description}`);
-      lines.push(`CATEGORIES:${category}`);
-      lines.push(
-        `STATUS:${event.status === "CONFIRMED" ? "CONFIRMED" : "TENTATIVE"}`
-      );
-      lines.push("TRANSP:TRANSPARENT");
+        // Crear descripción detallada
+        const descriptionParts: string[] = [];
+        if (event.description) descriptionParts.push(event.description);
+        if (event.bonuses?.length) {
+          descriptionParts.push("\\n\\nBonificaciones:");
+          event.bonuses.forEach((b) => descriptionParts.push(`- ${b}`));
+        }
+        if (event.spawns?.length) {
+          descriptionParts.push("\\n\\nApariciones:");
+          descriptionParts.push(event.spawns.join(", "));
+        }
+        if (event.raids?.length) {
+          descriptionParts.push("\\n\\nIncursiones:");
+          event.raids.forEach((r) => descriptionParts.push(`- ${r}`));
+        }
+        if (event.debuts?.length) {
+          descriptionParts.push("\\n\\nDebuts:");
+          descriptionParts.push(event.debuts.join(", "));
+        }
+        if (event.notes) {
+          descriptionParts.push(`\\n\\nNota: ${event.notes}`);
+        }
 
-      // Agregar alarmas (recordatorios)
-      // 1 hora antes para eventos cortos
-      if (
-        event.category === "SPOTLIGHT" ||
-        event.category === "RAID_HOUR" ||
-        event.category === "MAX_MONDAY"
-      ) {
-        lines.push("BEGIN:VALARM");
-        lines.push("TRIGGER:-PT1H");
-        lines.push("ACTION:DISPLAY");
-        lines.push(`DESCRIPTION:Recordatorio: ${event.title} en 1 hora`);
-        lines.push("END:VALARM");
-      }
-      // 1 día antes para eventos de día completo o multi-día
-      else if (
-        event.category === "COMMUNITY_DAY" ||
-        event.category === "RAID_DAY" ||
-        event.category === "EVENT"
-      ) {
-        lines.push("BEGIN:VALARM");
-        lines.push("TRIGGER:-P1D");
-        lines.push("ACTION:DISPLAY");
-        lines.push(`DESCRIPTION:Recordatorio: ${event.title} mañana`);
-        lines.push("END:VALARM");
-      }
+        const description = descriptionParts
+          .join("")
+          .replace(/\n/g, "\\n")
+          .replace(/,/g, "\\,");
 
-      lines.push("END:VEVENT");
-    });
+        // Crear categoría basada en el tipo de evento
+        const categoryLabels: Record<string, string> = {
+          COMMUNITY_DAY: "Community Day",
+          RAID_DAY: "Raid Day",
+          EVENT: "Evento",
+          SPOTLIGHT: "Spotlight Hour",
+          RAID_HOUR: "Raid Hour",
+          MAX_MONDAY: "Max Monday",
+          GO_PASS: "GO Pass",
+          RAID_ROTATION: "Rotación Raids",
+          MEGA_ROTATION: "Rotación Mega",
+          SHADOW_ROTATION: "Shadow Raids",
+        };
 
-    lines.push("END:VCALENDAR");
-    return lines.join("\r\n");
-  }
+        const category = categoryLabels[event.category] || "Pokémon GO";
 
-  // Descargar archivo .ics
-  function downloadICS(events: Event[]) {
-    const icsContent = generateICS(events);
-    const blob = new Blob([icsContent], {
-      type: "text/calendar;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "pokemon-go-eventos-enero-2026.ics";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
+        lines.push("BEGIN:VEVENT");
+        lines.push(`UID:${event.id}@pogocalendar.com`);
+        lines.push(`DTSTAMP:${formatICSDate(new Date())}`);
+        lines.push(`DTSTART:${formatICSDate(startDate)}`);
+        lines.push(`DTEND:${formatICSDate(endDate)}`);
+        lines.push(`SUMMARY:${event.title}`);
+        lines.push(`DESCRIPTION:${description}`);
+        lines.push(`CATEGORIES:${category}`);
+        lines.push(
+          `STATUS:${event.status === "CONFIRMED" ? "CONFIRMED" : "TENTATIVE"}`
+        );
+        lines.push("TRANSP:TRANSPARENT");
 
-  // Renderizar lista de eventos
-  function renderEventsList(events: Event[]) {
-    const listContainer = document.getElementById("export-events-list");
-    if (!listContainer) return;
+        // Agregar alarmas (recordatorios)
+        // 1 hora antes para eventos cortos
+        if (
+          event.category === "SPOTLIGHT" ||
+          event.category === "RAID_HOUR" ||
+          event.category === "MAX_MONDAY"
+        ) {
+          lines.push("BEGIN:VALARM");
+          lines.push("TRIGGER:-PT1H");
+          lines.push("ACTION:DISPLAY");
+          lines.push(`DESCRIPTION:Recordatorio: ${event.title} en 1 hora`);
+          lines.push("END:VALARM");
+        }
+        // 1 día antes para eventos de día completo o multi-día
+        else if (
+          event.category === "COMMUNITY_DAY" ||
+          event.category === "RAID_DAY" ||
+          event.category === "EVENT"
+        ) {
+          lines.push("BEGIN:VALARM");
+          lines.push("TRIGGER:-P1D");
+          lines.push("ACTION:DISPLAY");
+          lines.push(`DESCRIPTION:Recordatorio: ${event.title} mañana`);
+          lines.push("END:VALARM");
+        }
 
-    listContainer.innerHTML = "";
-
-    const categoryColors: Record<string, string> = {
-      COMMUNITY_DAY:
-        "bg-emerald-100 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700",
-      EVENT:
-        "bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700",
-      RAID_DAY:
-        "bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700",
-      SPOTLIGHT:
-        "bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700",
-      RAID_HOUR:
-        "bg-rose-100 dark:bg-rose-900/30 border-rose-300 dark:border-rose-700",
-      MAX_MONDAY:
-        "bg-sky-100 dark:bg-sky-900/30 border-sky-300 dark:border-sky-700",
-      GO_PASS:
-        "bg-teal-100 dark:bg-teal-900/30 border-teal-300 dark:border-teal-700",
-      RAID_ROTATION:
-        "bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700",
-      MEGA_ROTATION:
-        "bg-fuchsia-100 dark:bg-fuchsia-900/30 border-fuchsia-300 dark:border-fuchsia-700",
-      SHADOW_ROTATION:
-        "bg-gray-100 dark:bg-gray-900/30 border-gray-300 dark:border-gray-700",
-    };
-
-    events.forEach((event) => {
-      const item = document.createElement("div");
-      const colorClass =
-        categoryColors[event.category] ||
-        "bg-gray-100 dark:bg-gray-900/30 border-gray-300 dark:border-gray-700";
-      const isSelected = selectedEvents.get(event.id)?.selected || false;
-
-      item.className = `export-event-item p-2 sm:p-2.5 border rounded-lg cursor-pointer ${colorClass} ${isSelected ? "selected" : ""}`;
-      item.dataset.eventId = event.id;
-
-      const startDate = format(parseISO(event.start), "d MMM, HH:mm", {
-        locale: es,
-      });
-      const endDate = format(parseISO(event.end), "d MMM, HH:mm", {
-        locale: es,
+        lines.push("END:VEVENT");
       });
 
-      item.innerHTML = `
+      lines.push("END:VCALENDAR");
+      return lines.join("\r\n");
+    }
+
+    // Descargar archivo .ics
+    function downloadICS(events: Event[]) {
+      const icsContent = generateICS(events);
+      const blob = new Blob([icsContent], {
+        type: "text/calendar;charset=utf-8",
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "pokemon-go-eventos-enero-2026.ics";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // Renderizar lista de eventos
+    function renderEventsList(events: Event[]) {
+      const listContainer = document.getElementById("export-events-list");
+      if (!listContainer) return;
+
+      listContainer.innerHTML = "";
+
+      const categoryColors: Record<string, string> = {
+        COMMUNITY_DAY:
+          "bg-emerald-100 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700",
+        EVENT:
+          "bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700",
+        RAID_DAY:
+          "bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700",
+        SPOTLIGHT:
+          "bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700",
+        RAID_HOUR:
+          "bg-rose-100 dark:bg-rose-900/30 border-rose-300 dark:border-rose-700",
+        MAX_MONDAY:
+          "bg-sky-100 dark:bg-sky-900/30 border-sky-300 dark:border-sky-700",
+        GO_PASS:
+          "bg-teal-100 dark:bg-teal-900/30 border-teal-300 dark:border-teal-700",
+        RAID_ROTATION:
+          "bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700",
+        MEGA_ROTATION:
+          "bg-fuchsia-100 dark:bg-fuchsia-900/30 border-fuchsia-300 dark:border-fuchsia-700",
+        SHADOW_ROTATION:
+          "bg-gray-100 dark:bg-gray-900/30 border-gray-300 dark:border-gray-700",
+      };
+
+      events.forEach((event) => {
+        const item = document.createElement("div");
+        const colorClass =
+          categoryColors[event.category] ||
+          "bg-gray-100 dark:bg-gray-900/30 border-gray-300 dark:border-gray-700";
+        const isSelected = selectedEvents.get(event.id)?.selected || false;
+
+        item.className = `export-event-item p-2 sm:p-2.5 border rounded-lg cursor-pointer ${colorClass} ${isSelected ? "selected" : ""}`;
+        item.dataset.eventId = event.id;
+
+        const startDate = format(parseISO(event.start), "d MMM, HH:mm", {
+          locale: es,
+        });
+        const endDate = format(parseISO(event.end), "d MMM, HH:mm", {
+          locale: es,
+        });
+
+        item.innerHTML = `
         <div class="flex items-start gap-2 sm:gap-2.5">
           <input
             type="checkbox"
@@ -534,247 +506,250 @@
         </div>
       `;
 
-      item.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement;
-        if (
-          target.tagName !== "INPUT" ||
-          (target as HTMLInputElement).type !== "checkbox"
-        ) {
-          const checkbox = item.querySelector(
-            ".event-checkbox"
-          ) as HTMLInputElement;
-          if (checkbox) {
-            checkbox.checked = !checkbox.checked;
+        item.addEventListener("click", (e) => {
+          const target = e.target as HTMLElement;
+          if (
+            target.tagName !== "INPUT" ||
+            (target as HTMLInputElement).type !== "checkbox"
+          ) {
+            const checkbox = item.querySelector(
+              ".event-checkbox"
+            ) as HTMLInputElement;
+            if (checkbox) {
+              checkbox.checked = !checkbox.checked;
+            }
           }
-        }
-        toggleEventSelection(event.id);
+          toggleEventSelection(event.id);
+        });
+
+        listContainer.appendChild(item);
       });
 
-      listContainer.appendChild(item);
-    });
-
-    updateSelectedCount();
-  }
-
-  // Toggle selección de evento
-  function toggleEventSelection(eventId: string) {
-    const current = selectedEvents.get(eventId);
-    if (current) {
-      current.selected = !current.selected;
+      updateSelectedCount();
     }
-    updateUI();
-  }
 
-  // Actualizar UI
-  function updateUI() {
-    const items = document.querySelectorAll(".export-event-item");
-    items.forEach((item) => {
-      const eventId = (item as HTMLElement).dataset.eventId;
-      const isSelected = selectedEvents.get(eventId || "")?.selected || false;
-      const checkbox = item.querySelector(
-        ".event-checkbox"
-      ) as HTMLInputElement;
-
-      if (checkbox) checkbox.checked = isSelected;
-
-      if (isSelected) {
-        item.classList.add("selected");
-      } else {
-        item.classList.remove("selected");
+    // Toggle selección de evento
+    function toggleEventSelection(eventId: string) {
+      const current = selectedEvents.get(eventId);
+      if (current) {
+        current.selected = !current.selected;
       }
-    });
-
-    updateSelectedCount();
-  }
-
-  // Actualizar contador
-  function updateSelectedCount() {
-    const count = Array.from(selectedEvents.values()).filter(
-      (e) => e.selected
-    ).length;
-    const countElements = [
-      document.getElementById("selected-count"),
-      document.getElementById("footer-selected-count"),
-    ];
-    countElements.forEach((el) => {
-      if (el) el.textContent = count.toString();
-    });
-
-    const exportBtn = document.getElementById(
-      "export-events-btn"
-    ) as HTMLButtonElement;
-    if (exportBtn) {
-      exportBtn.disabled = count === 0;
-    }
-  }
-
-  // Resetear modal a estado inicial
-  function resetExportModal() {
-    // Deseleccionar todos los eventos
-    selectedEvents.forEach((e) => (e.selected = false));
-
-    // Limpiar búsqueda
-    const searchInput = document.getElementById(
-      "export-search"
-    ) as HTMLInputElement;
-    if (searchInput) {
-      searchInput.value = "";
-    }
-
-    // Ocultar selección por categoría
-    const categorySection = document.getElementById("category-selection");
-    if (categorySection) {
-      categorySection.classList.add("hidden");
-    }
-
-    // Renderizar todos los eventos y actualizar UI
-    renderEventsList(allEvents);
-    updateUI();
-  }
-
-  // Inicializar modal
-  function initExportModal() {
-    const modal = document.getElementById("export-modal");
-    const closeBtn = document.getElementById("close-export-modal");
-    const cancelBtn = document.getElementById("cancel-export-btn");
-    const exportBtn = document.getElementById("export-events-btn");
-    const selectAllBtn = document.getElementById("select-all-btn");
-    const deselectAllBtn = document.getElementById("deselect-all-btn");
-    const selectCategoryBtn = document.getElementById("select-category-btn");
-    const searchInput = document.getElementById(
-      "export-search"
-    ) as HTMLInputElement;
-
-    if (!modal) return;
-
-    // Detectar dispositivo
-    const device = detectDevice();
-    const deviceTypeEl = document.getElementById("device-type");
-    const deviceInstructionsEl = document.getElementById("device-instructions");
-    if (deviceTypeEl) deviceTypeEl.textContent = device.type;
-    if (deviceInstructionsEl)
-      deviceInstructionsEl.textContent = device.instructions;
-
-    // Cargar eventos
-    allEvents = getAllEvents();
-    selectedEvents = new Map(
-      allEvents.map((e) => [e.id, { event: e, selected: false }])
-    );
-
-    // Botones
-    closeBtn?.addEventListener("click", () => {
-      modal.classList.remove("show");
-      document.body.classList.remove("modal-open");
-    });
-    cancelBtn?.addEventListener("click", () => {
-      modal.classList.remove("show");
-      document.body.classList.remove("modal-open");
-    });
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.classList.remove("show");
-        document.body.classList.remove("modal-open");
-      }
-    });
-
-    exportBtn?.addEventListener("click", () => {
-      const eventsToExport = Array.from(selectedEvents.values())
-        .filter((e) => e.selected)
-        .map((e) => e.event);
-
-      if (eventsToExport.length > 0) {
-        downloadICS(eventsToExport);
-        modal.classList.remove("show");
-        document.body.classList.remove("modal-open");
-
-        // Resetear todo después de exportar
-        resetExportModal();
-
-        // Mostrar mensaje de éxito
-        setTimeout(() => {
-          alert(
-            `✅ ${eventsToExport.length} eventos exportados exitosamente!\n\nAbre el archivo descargado para agregarlos a tu calendario.`
-          );
-        }, 100);
-      }
-    });
-
-    selectAllBtn?.addEventListener("click", () => {
-      selectedEvents.forEach((e) => (e.selected = true));
       updateUI();
-    });
+    }
 
-    deselectAllBtn?.addEventListener("click", () => {
+    // Actualizar UI
+    function updateUI() {
+      const items = document.querySelectorAll(".export-event-item");
+      items.forEach((item) => {
+        const eventId = (item as HTMLElement).dataset.eventId;
+        const isSelected = selectedEvents.get(eventId || "")?.selected || false;
+        const checkbox = item.querySelector(
+          ".event-checkbox"
+        ) as HTMLInputElement;
+
+        if (checkbox) checkbox.checked = isSelected;
+
+        if (isSelected) {
+          item.classList.add("selected");
+        } else {
+          item.classList.remove("selected");
+        }
+      });
+
+      updateSelectedCount();
+    }
+
+    // Actualizar contador
+    function updateSelectedCount() {
+      const count = Array.from(selectedEvents.values()).filter(
+        (e) => e.selected
+      ).length;
+      const countElements = [
+        document.getElementById("selected-count"),
+        document.getElementById("footer-selected-count"),
+      ];
+      countElements.forEach((el) => {
+        if (el) el.textContent = count.toString();
+      });
+
+      const exportBtn = document.getElementById(
+        "export-events-btn"
+      ) as HTMLButtonElement;
+      if (exportBtn) {
+        exportBtn.disabled = count === 0;
+      }
+    }
+
+    // Resetear modal a estado inicial
+    function resetExportModal() {
+      // Deseleccionar todos los eventos
       selectedEvents.forEach((e) => (e.selected = false));
-      updateUI();
-    });
 
-    selectCategoryBtn?.addEventListener("click", () => {
+      // Limpiar búsqueda
+      const searchInput = document.getElementById(
+        "export-search"
+      ) as HTMLInputElement;
+      if (searchInput) {
+        searchInput.value = "";
+      }
+
+      // Ocultar selección por categoría
       const categorySection = document.getElementById("category-selection");
       if (categorySection) {
-        categorySection.classList.toggle("hidden");
+        categorySection.classList.add("hidden");
       }
-    });
 
-    // Filtros por categoría
-    document.querySelectorAll(".category-filter-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const category = (btn as HTMLElement).dataset.category;
-        selectedEvents.forEach((e) => {
-          if (e.event.category === category) {
-            e.selected = !e.selected;
-          }
-        });
+      // Renderizar todos los eventos y actualizar UI
+      renderEventsList(allEvents);
+      updateUI();
+    }
+
+    // Inicializar modal
+    function initExportModal() {
+      const modal = document.getElementById("export-modal");
+      const closeBtn = document.getElementById("close-export-modal");
+      const cancelBtn = document.getElementById("cancel-export-btn");
+      const exportBtn = document.getElementById("export-events-btn");
+      const selectAllBtn = document.getElementById("select-all-btn");
+      const deselectAllBtn = document.getElementById("deselect-all-btn");
+      const selectCategoryBtn = document.getElementById("select-category-btn");
+      const searchInput = document.getElementById(
+        "export-search"
+      ) as HTMLInputElement;
+
+      if (!modal) return;
+
+      // Detectar dispositivo
+      const device = detectDevice();
+      const deviceTypeEl = document.getElementById("device-type");
+      const deviceInstructionsEl = document.getElementById(
+        "device-instructions"
+      );
+      if (deviceTypeEl) deviceTypeEl.textContent = device.type;
+      if (deviceInstructionsEl)
+        deviceInstructionsEl.textContent = device.instructions;
+
+      // Cargar eventos
+      allEvents = getAllEvents();
+      selectedEvents = new Map(
+        allEvents.map((e) => [e.id, { event: e, selected: false }])
+      );
+
+      // Botones
+      closeBtn?.addEventListener("click", () => {
+        modal.classList.remove("show");
+        document.body.classList.remove("modal-open");
+      });
+      cancelBtn?.addEventListener("click", () => {
+        modal.classList.remove("show");
+        document.body.classList.remove("modal-open");
+      });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("show");
+          document.body.classList.remove("modal-open");
+        }
+      });
+
+      exportBtn?.addEventListener("click", () => {
+        const eventsToExport = Array.from(selectedEvents.values())
+          .filter((e) => e.selected)
+          .map((e) => e.event);
+
+        if (eventsToExport.length > 0) {
+          downloadICS(eventsToExport);
+          modal.classList.remove("show");
+          document.body.classList.remove("modal-open");
+
+          // Resetear todo después de exportar
+          resetExportModal();
+
+          // Mostrar mensaje de éxito
+          setTimeout(() => {
+            alert(
+              `✅ ${eventsToExport.length} eventos exportados exitosamente!\n\nAbre el archivo descargado para agregarlos a tu calendario.`
+            );
+          }, 100);
+        }
+      });
+
+      selectAllBtn?.addEventListener("click", () => {
+        selectedEvents.forEach((e) => (e.selected = true));
         updateUI();
       });
-    });
 
-    // Búsqueda
-    searchInput?.addEventListener("input", () => {
-      const query = searchInput.value.toLowerCase();
-      const filtered = allEvents.filter((e) => {
-        const searchText = [
-          e.title,
-          e.description,
-          e.category,
-          ...(e.spawns || []),
-          ...(e.raids || []),
-          ...(e.bonuses || []),
-        ]
-          .join(" ")
-          .toLowerCase();
-        return searchText.includes(query);
+      deselectAllBtn?.addEventListener("click", () => {
+        selectedEvents.forEach((e) => (e.selected = false));
+        updateUI();
       });
-      renderEventsList(filtered);
-    });
 
-    renderEventsList(allEvents);
-  }
-
-  // Abrir modal desde botón externo
-  window.addEventListener("DOMContentLoaded", () => {
-    initExportModal();
-
-    // Listener para botón de exportar
-    document.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.id === "open-export-modal" ||
-        target.closest("#open-export-modal")
-      ) {
-        const modal = document.getElementById("export-modal");
-        if (modal) {
-          modal.classList.add("show");
-          document.body.classList.add("modal-open");
-          // Resetear búsqueda y renderizar todos los eventos
-          const searchInput = document.getElementById(
-            "export-search"
-          ) as HTMLInputElement;
-          if (searchInput) searchInput.value = "";
-          renderEventsList(allEvents);
+      selectCategoryBtn?.addEventListener("click", () => {
+        const categorySection = document.getElementById("category-selection");
+        if (categorySection) {
+          categorySection.classList.toggle("hidden");
         }
-      }
+      });
+
+      // Filtros por categoría
+      document.querySelectorAll(".category-filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const category = (btn as HTMLElement).dataset.category;
+          selectedEvents.forEach((e) => {
+            if (e.event.category === category) {
+              e.selected = !e.selected;
+            }
+          });
+          updateUI();
+        });
+      });
+
+      // Búsqueda
+      searchInput?.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        const filtered = allEvents.filter((e) => {
+          const searchText = [
+            e.title,
+            e.description,
+            e.category,
+            ...(e.spawns || []),
+            ...(e.raids || []),
+            ...(e.bonuses || []),
+          ]
+            .join(" ")
+            .toLowerCase();
+          return searchText.includes(query);
+        });
+        renderEventsList(filtered);
+      });
+
+      renderEventsList(allEvents);
+    }
+
+    // Abrir modal desde botón externo
+    window.addEventListener("DOMContentLoaded", () => {
+      initExportModal();
+
+      // Listener para botón de exportar
+      document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        if (
+          target.id === "open-export-modal" ||
+          target.closest("#open-export-modal")
+        ) {
+          const modal = document.getElementById("export-modal");
+          if (modal) {
+            modal.classList.add("show");
+            document.body.classList.add("modal-open");
+            // Resetear búsqueda y renderizar todos los eventos
+            const searchInput = document.getElementById(
+              "export-search"
+            ) as HTMLInputElement;
+            if (searchInput) searchInput.value = "";
+            renderEventsList(allEvents);
+          }
+        }
+      });
     });
-  });
-</script>
+  </script>
+</div>
