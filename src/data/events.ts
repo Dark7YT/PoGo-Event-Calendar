@@ -62,6 +62,25 @@ export type EnrichedEvent = Event;
 
 export const calendarDataset: Event[] = [
 
+  // NEW YEAR'S 2026 (Aún activo hasta el 4 de enero)
+  {
+    id: 'new-years-2026',
+    title: "New Year's 2026",
+    category: 'EVENT',
+    start: '2025-12-31T10:00:00',
+    end: '2026-01-04T20:00:00',
+    status: 'CONFIRMED',
+    description: 'Celebración de Año Nuevo con Pikachu con sombrero especial y bonos en incursiones.',
+    bonuses: [
+      '2× XP en incursiones',
+      '2× Polvo Estelar en incursiones',
+      'Mayor probabilidad de Pikachu con sombrero Shiny',
+      'Límite de Lucky garantizados: 35 → 45'
+    ],
+    spawns: ['Pikachu con sombrero', 'Delibird', 'Wurmple', 'Starly'],
+    raids: ['1★: Pikachu con sombrero, Delibird', '3★: Raichu con sombrero, Delibird'],
+  },
+
   // GO PASS: JANUARY
   {
     id: 'go-pass-january',
@@ -167,12 +186,12 @@ export const calendarDataset: Event[] = [
   },
   {
     id: 'taken-over',
-    title: 'Taken Over',
+    title: 'Precious Pals: Taken Over',
     category: 'EVENT',
     start: '2026-01-23T10:00:00',
     end: '2026-01-25T20:00:00',
     status: 'TBD',
-    description: 'Takeover de Team GO Rocket.'
+    description: 'Takeover de Team GO Rocket durante el evento Precious Pals.'
   },
 
   // SHADOW RAID DAY
@@ -298,6 +317,16 @@ export const calendarDataset: Event[] = [
 
   // MAX MONDAY (Lunes 18:00-19:00)
   {
+    id: 'max-monday-drampa',
+    title: 'Max Monday: Drampa',
+    category: 'MAX_MONDAY',
+    start: '2026-01-05T18:00:00',
+    end: '2026-01-05T19:00:00',
+    status: 'CONFIRMED',
+    spawns: ['Dynamax Drampa'],
+    description: 'Power Spot takeover Drampa.'
+  },
+  {
     id: 'max-monday-caterpie',
     title: 'Max Monday: Caterpie',
     category: 'MAX_MONDAY',
@@ -345,6 +374,16 @@ export const calendarDataset: Event[] = [
     category: 'RAID_ROTATION',
     start: '2026-01-05T10:00:00',
     end: '2026-01-16T10:00:00',
+    status: 'CONFIRMED',
+    raids: ['5★: Genesect (Burn)', '5★: Genesect (Chill)'],
+    description: 'Rotación 5 estrellas.'
+  },
+  {
+    id: '5star-thundurus',
+    title: '5★: Thundurus',
+    category: 'RAID_ROTATION',
+    start: '2026-01-16T10:00:00',
+    end: '2026-01-25T10:00:00',
     status: 'CONFIRMED',
     raids: ['5★: Thundurus (Incarnate)'],
     description: 'Rotación 5 estrellas.'
@@ -405,7 +444,7 @@ export const calendarDataset: Event[] = [
     notes: 'Solo viernes, sábado y domingo'
   },
 
-  // MAX BATTLES DIARIOS
+  // MAX BATTLES DIARIOS/SEMANALES
   {
     id: 'max-omanyte',
     title: 'Max Battles: Omanyte',
@@ -415,6 +454,16 @@ export const calendarDataset: Event[] = [
     status: 'CONFIRMED',
     spawns: ['Dynamax Omanyte'],
     description: 'Dynamax Omanyte en Power Spots.'
+  },
+  {
+    id: 'max-drampa-week',
+    title: 'Max Battles: Drampa',
+    category: 'MAX_MONDAY',
+    start: '2026-01-05T00:00:00',
+    end: '2026-01-12T23:59:00',
+    status: 'CONFIRMED',
+    spawns: ['Dynamax Drampa'],
+    description: 'Dynamax Drampa en Power Spots.'
   },
   {
     id: 'max-caterpie-week',

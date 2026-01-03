@@ -77,12 +77,12 @@ const statusBadge = getStatusBadge(event.status);
 ---
 
 <article
-  class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-[1.02]"
+  class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-[1.02] flex flex-col h-full"
   data-event-id={event.id}
 >
   <!-- Header con tipo de evento -->
   <div
-    class={`${getEventCategoryColor(event.category)} px-4 sm:px-6 py-2.5 sm:py-3`}
+    class={`${getEventCategoryColor(event.category)} px-4 sm:px-6 py-2.5 sm:py-3 flex-shrink-0`}
   >
     <div class="flex items-center justify-between gap-2">
       <span
@@ -99,7 +99,7 @@ const statusBadge = getStatusBadge(event.status);
   </div>
 
   <!-- Contenido -->
-  <div class="p-4 sm:p-6">
+  <div class="p-4 sm:p-6 flex-grow flex flex-col">
     <h3
       class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2"
     >
@@ -133,14 +133,14 @@ const statusBadge = getStatusBadge(event.status);
     <!-- Descripción -->
     {
       event.description && (
-        <p class="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 line-clamp-2">
+        <p class="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 line-clamp-2 flex-grow">
           {event.description}
         </p>
       )
     }
 
     <!-- Badges informativos -->
-    <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+    <div class="flex flex-wrap gap-1.5 sm:gap-2 mt-auto">
       {
         event.debuts && event.debuts.length > 0 && (
           <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium">

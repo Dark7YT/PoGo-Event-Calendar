@@ -756,14 +756,17 @@ const raidRotations = calendarDataset.filter(
 <script>
   // ============================================
   // EVENT FILTERS FUNCTIONALITY
+  // Nota: Los filtros SOLO afectan las tarjetas de eventos
+  // en la sección "Eventos Principales" (#events)
+  // El calendario es completamente independiente
   // ============================================
   function initEventFilters() {
     let currentCategoryFilter = "all";
     let currentStatusFilter = "all";
     let currentSearchQuery = "";
 
-    // Get all event cards
-    const eventCards = document.querySelectorAll(".event-card-wrapper");
+    // Get all event cards ONLY from the events section (not calendar)
+    const eventCards = document.querySelectorAll("#events .event-card-wrapper");
     const totalCount = eventCards.length;
     const totalCountEl = document.getElementById("total-count");
     const filteredCountEl = document.getElementById("filtered-count");
@@ -839,7 +842,8 @@ const raidRotations = calendarDataset.filter(
       }
 
       // Show/hide section titles if all events in a section are hidden
-      const sections = document.querySelectorAll(".events-container");
+      // Only affects events section, NOT calendar
+      const sections = document.querySelectorAll("#events .events-container");
       sections.forEach((section) => {
         const sectionCards = section.querySelectorAll(
           ".event-card-wrapper:not(.hidden)"
