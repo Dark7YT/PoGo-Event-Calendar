@@ -5,7 +5,7 @@
 <!-- Modal Container -->
 <div
   id="event-modal"
-  class="fixed inset-0 z-50 hidden items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-sm"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-2 sm:p-4 bg-black/60"
   aria-hidden="true"
 >
   <div
@@ -68,7 +68,12 @@
   }
 
   .animate-modal-appear {
-    animation: modal-appear 0.2s ease-out;
+    animation: modal-appear 0.15s ease-out;
+    will-change: transform, opacity;
+  }
+
+  .animate-modal-appear::after {
+    will-change: auto;
   }
 
   #event-modal.show {

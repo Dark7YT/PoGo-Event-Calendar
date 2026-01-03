@@ -96,7 +96,8 @@ const statusBadge = getStatusBadge(event.status);
 ---
 
 <article
-  class={`bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-[1.02] flex flex-col h-full border-2 ${getEventCategoryBorder(event.category)}`}
+  class={`bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200 overflow-hidden group cursor-pointer hover:scale-[1.01] flex flex-col h-full border-2 ${getEventCategoryBorder(event.category)}`}
+  style="will-change: transform;"
   data-event-id={event.id}
 >
   <!-- Header con tipo de evento -->
