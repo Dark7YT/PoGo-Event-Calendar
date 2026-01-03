@@ -1,0 +1,211 @@
+---
+import type { EnrichedEvent, EventCategory } from "../data/events";
+import { format, parseISO } from "date-fns";
+import { es } from "date-fns/locale";
+
+interface Props {
+  event: EnrichedEvent;
+}
+
+const { event } = Astro.props;
+
+function getEventCategoryLabel(category: EventCategory) {
+  const labels: Record<EventCategory, string> = {
+    COMMUNITY_DAY: "Community Day",
+    RAID_DAY: "Raid Day",
+    EVENT: "Evento",
+    SPOTLIGHT: "Spotlight Hour",
+    RAID_HOUR: "Raid Hour",
+    MAX_MONDAY: "Max Monday",
+    PVP: "GO Battle League",
+    GO_PASS: "GO Pass",
+    RAID_ROTATION: "Raid Rotation",
+    MEGA_ROTATION: "Mega Rotation",
+    SHADOW_ROTATION: "Shadow Rotation",
+    RESEARCH: "Investigación",
+    OTHER: "Otro",
+  };
+  return labels[category] || category;
+}
+
+function getEventCategoryColor(category: EventCategory) {
+  const colors: Record<EventCategory, string> = {
+    COMMUNITY_DAY: "bg-green-500",
+    RAID_DAY: "bg-red-500",
+    EVENT: "bg-blue-500",
+    SPOTLIGHT: "bg-yellow-500",
+    RAID_HOUR: "bg-purple-500",
+    MAX_MONDAY: "bg-pink-500",
+    PVP: "bg-indigo-500",
+    GO_PASS: "bg-teal-500",
+    RAID_ROTATION: "bg-orange-500",
+    MEGA_ROTATION: "bg-cyan-500",
+    SHADOW_ROTATION: "bg-rose-500",
+    RESEARCH: "bg-yellow-500",
+    OTHER: "bg-gray-500",
+  };
+  return colors[category] || "bg-gray-500";
+}
+
+function getStatusBadge(status: string) {
+  const badges = {
+    CONFIRMED: {
+      text: "Confirmado",
+      class:
+        "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300",
+    },
+    TENTATIVE: {
+      text: "Tentativo",
+      class:
+        "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300",
+    },
+    TBD: {
+      text: "Por definir",
+      class: "bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300",
+    },
+  };
+  return badges[status as keyof typeof badges] || badges["CONFIRMED"];
+}
+
+const startDate = format(parseISO(event.start), "d 'de' MMMM, HH:mm", {
+  locale: es,
+});
+const endDate = format(parseISO(event.end), "d 'de' MMMM, HH:mm", {
+  locale: es,
+});
+const statusBadge = getStatusBadge(event.status);
+---
+
+<article
+  class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:scale-[1.02]"
+  data-event-id={event.id}
+>
+  <!-- Header con tipo de evento -->
+  <div class={`${getEventCategoryColor(event.category)} px-6 py-3`}>
+    <div class="flex items-center justify-between">
+      <span class="text-white font-semibold text-sm uppercase tracking-wide">
+        {getEventCategoryLabel(event.category)}
+      </span>
+      <span
+        class={`${statusBadge.class} text-xs px-2 py-1 rounded-full font-medium`}
+      >
+        {statusBadge.text}
+      </span>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="p-6">
+    <h3
+      class="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+    >
+      {event.title}
+    </h3>
+
+    <!-- Fechas -->
+    <div
+      class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-4 space-x-2"
+    >
+      <svg
+        class="w-4 h-4 flex-shrink-0"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        ></path>
+      </svg>
+      <span class="line-clamp-1">{startDate}</span>
+      <span>→</span>
+      <span class="line-clamp-1">{endDate}</span>
+    </div>
+
+    <!-- Descripción -->
+    {
+      event.description && (
+        <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">
+          {event.description}
+        </p>
+      )
+    }
+
+    <!-- Badges informativos -->
+    <div class="flex flex-wrap gap-2 mb-4">
+      {
+        event.debuts && event.debuts.length > 0 && (
+          <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs px-3 py-1 rounded-full font-medium">
+            ⭐ {event.debuts.length}{" "}
+            {event.debuts.length === 1 ? "Debut" : "Debuts"}
+          </span>
+        )
+      }
+      {
+        event.bonuses && event.bonuses.length > 0 && (
+          <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-3 py-1 rounded-full font-medium">
+            🎁 {event.bonuses.length}{" "}
+            {event.bonuses.length === 1 ? "Bonus" : "Bonuses"}
+          </span>
+        )
+      }
+      {
+        event.spawns && event.spawns.length > 0 && (
+          <span class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs px-3 py-1 rounded-full font-medium">
+            🎯 {event.spawns.length} Spawns
+          </span>
+        )
+      }
+      {
+        event.raids && event.raids.length > 0 && (
+          <span class="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs px-3 py-1 rounded-full font-medium">
+            ⚔️ Raids
+          </span>
+        )
+      }
+      {
+        event.children && event.children.length > 0 && (
+          <span class="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 text-xs px-3 py-1 rounded-full font-medium">
+            📋 {event.children.length} Sub-eventos
+          </span>
+        )
+      }
+    </div>
+  </div>
+</article>
+
+<script>
+  function initEventCards() {
+    const eventCards = document.querySelectorAll("[data-event-id]");
+
+    // Event cards click
+    eventCards.forEach((card) => {
+      // Clonar para eliminar listeners previos
+      const newCard = card.cloneNode(true) as HTMLElement;
+      card.parentNode?.replaceChild(newCard, card);
+
+      newCard.addEventListener("click", () => {
+        const eventId = newCard.getAttribute("data-event-id");
+        if (eventId) {
+          document.dispatchEvent(
+            new CustomEvent("event-selected", {
+              detail: { eventId },
+            })
+          );
+        }
+      });
+    });
+  }
+
+  // Ejecutar inmediatamente si DOM está listo
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initEventCards);
+  } else {
+    initEventCards();
+  }
+
+  // Ejecutar en transiciones de Astro
+  document.addEventListener("astro:page-load", initEventCards);
+</script>

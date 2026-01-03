@@ -1,0 +1,663 @@
+---
+
+---
+
+<!-- Modal Container -->
+<div
+  id="event-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+  aria-hidden="true"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden animate-modal-appear"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Header -->
+    <div
+      id="modal-header"
+      class="sticky top-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-4 flex items-center justify-between shadow-lg"
+    >
+      <h2 id="modal-title" class="text-2xl font-bold text-white">Evento</h2>
+      <button
+        id="close-modal"
+        class="p-2 rounded-lg hover:bg-white/20 transition-colors"
+        aria-label="Cerrar modal"
+      >
+        <svg
+          class="w-6 h-6 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="overflow-y-auto max-h-[calc(90vh-80px)] p-6">
+      <div id="modal-content" class="space-y-6">
+        <!-- El contenido se inyectará dinámicamente -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @keyframes modal-appear {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-modal-appear {
+    animation: modal-appear 0.2s ease-out;
+  }
+
+  #event-modal.show {
+    display: flex;
+  }
+</style>
+
+<script>
+  import type { Event } from "../data/events";
+  import { getAllEvents } from "../data/events";
+  import { format, parseISO } from "date-fns";
+  import { es } from "date-fns/locale";
+
+  // Mapeo de categorías a colores Tailwind optimizados para legibilidad
+  const categoryColors: Record<string, string> = {
+    COMMUNITY_DAY: "emerald",
+    RAID_DAY: "red",
+    RAID_HOUR: "rose",
+    EVENT: "purple",
+    SPOTLIGHT: "orange",
+    MAX_MONDAY: "sky",
+    SHADOW_ROTATION: "slate",
+    GO_PASS: "teal",
+    PVP: "blue",
+    RAID_ROTATION: "red",
+    MEGA_ROTATION: "fuchsia",
+    RESEARCH: "amber",
+    OTHER: "gray",
+  };
+
+  const categoryLabels: Record<string, string> = {
+    COMMUNITY_DAY: "Día de la Comunidad",
+    RAID_DAY: "Día de Incursión",
+    RAID_HOUR: "Hora de Incursión",
+    EVENT: "Evento",
+    SPOTLIGHT: "Hora Destacada",
+    MAX_MONDAY: "Lunes Max",
+    SHADOW_ROTATION: "Rotación Shadow",
+    GO_PASS: "GO Pass",
+    PVP: "Liga de Combates GO",
+    RAID_ROTATION: "Rotación de Incursiones",
+    MEGA_ROTATION: "Rotación Mega",
+    RESEARCH: "Investigación",
+    OTHER: "Otro",
+  };
+
+  function getColor(category: string): string {
+    return categoryColors[category] || "gray";
+  }
+
+  // Helper functions para obtener clases completas de Tailwind (no dinámicas)
+  function getBorderClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "border-emerald-200 dark:border-emerald-800",
+      red: "border-red-200 dark:border-red-800",
+      rose: "border-rose-200 dark:border-rose-800",
+      purple: "border-purple-200 dark:border-purple-800",
+      orange: "border-orange-200 dark:border-orange-800",
+      sky: "border-sky-200 dark:border-sky-800",
+      slate: "border-slate-200 dark:border-slate-800",
+      teal: "border-teal-200 dark:border-teal-800",
+      blue: "border-blue-200 dark:border-blue-800",
+      fuchsia: "border-fuchsia-200 dark:border-fuchsia-800",
+      amber: "border-amber-200 dark:border-amber-800",
+      gray: "border-gray-200 dark:border-gray-800",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getHeaderBgClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "bg-emerald-100 dark:bg-emerald-900/40",
+      red: "bg-red-100 dark:bg-red-900/40",
+      rose: "bg-rose-100 dark:bg-rose-900/40",
+      purple: "bg-purple-100 dark:bg-purple-900/40",
+      orange: "bg-orange-100 dark:bg-orange-900/40",
+      sky: "bg-sky-100 dark:bg-sky-900/40",
+      slate: "bg-slate-100 dark:bg-slate-900/40",
+      teal: "bg-teal-100 dark:bg-teal-900/40",
+      blue: "bg-blue-100 dark:bg-blue-900/40",
+      fuchsia: "bg-fuchsia-100 dark:bg-fuchsia-900/40",
+      amber: "bg-amber-100 dark:bg-amber-900/40",
+      gray: "bg-gray-100 dark:bg-gray-900/40",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getHeaderBorderClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "border-emerald-300 dark:border-emerald-700",
+      red: "border-red-300 dark:border-red-700",
+      rose: "border-rose-300 dark:border-rose-700",
+      purple: "border-purple-300 dark:border-purple-700",
+      orange: "border-orange-300 dark:border-orange-700",
+      sky: "border-sky-300 dark:border-sky-700",
+      slate: "border-slate-300 dark:border-slate-700",
+      teal: "border-teal-300 dark:border-teal-700",
+      blue: "border-blue-300 dark:border-blue-700",
+      fuchsia: "border-fuchsia-300 dark:border-fuchsia-700",
+      amber: "border-amber-300 dark:border-amber-700",
+      gray: "border-gray-300 dark:border-gray-700",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getTitleTextClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "text-emerald-900 dark:text-emerald-100",
+      red: "text-red-900 dark:text-red-100",
+      rose: "text-rose-900 dark:text-rose-100",
+      purple: "text-purple-900 dark:text-purple-100",
+      orange: "text-orange-900 dark:text-orange-100",
+      sky: "text-sky-900 dark:text-sky-100",
+      slate: "text-slate-900 dark:text-slate-100",
+      teal: "text-teal-900 dark:text-teal-100",
+      blue: "text-blue-900 dark:text-blue-100",
+      fuchsia: "text-fuchsia-900 dark:text-fuchsia-100",
+      amber: "text-amber-900 dark:text-amber-100",
+      gray: "text-gray-900 dark:text-gray-100",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getBadgeBgClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "bg-emerald-700 dark:bg-emerald-600",
+      red: "bg-red-700 dark:bg-red-600",
+      rose: "bg-rose-700 dark:bg-rose-600",
+      purple: "bg-purple-700 dark:bg-purple-600",
+      orange: "bg-orange-700 dark:bg-orange-600",
+      sky: "bg-sky-700 dark:bg-sky-600",
+      slate: "bg-slate-700 dark:bg-slate-600",
+      teal: "bg-teal-700 dark:bg-teal-600",
+      blue: "bg-blue-700 dark:bg-blue-600",
+      fuchsia: "bg-fuchsia-700 dark:bg-fuchsia-600",
+      amber: "bg-amber-700 dark:bg-amber-600",
+      gray: "bg-gray-700 dark:bg-gray-600",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getTimeBgClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "bg-emerald-50 dark:bg-emerald-900/30",
+      red: "bg-red-50 dark:bg-red-900/30",
+      rose: "bg-rose-50 dark:bg-rose-900/30",
+      purple: "bg-purple-50 dark:bg-purple-900/30",
+      orange: "bg-orange-50 dark:bg-orange-900/30",
+      sky: "bg-sky-50 dark:bg-sky-900/30",
+      slate: "bg-slate-50 dark:bg-slate-900/30",
+      teal: "bg-teal-50 dark:bg-teal-900/30",
+      blue: "bg-blue-50 dark:bg-blue-900/30",
+      fuchsia: "bg-fuchsia-50 dark:bg-fuchsia-900/30",
+      amber: "bg-amber-50 dark:bg-amber-900/30",
+      gray: "bg-gray-50 dark:bg-gray-900/30",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getTimeBorderClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "border-emerald-200 dark:border-emerald-700",
+      red: "border-red-200 dark:border-red-700",
+      rose: "border-rose-200 dark:border-rose-700",
+      purple: "border-purple-200 dark:border-purple-700",
+      orange: "border-orange-200 dark:border-orange-700",
+      sky: "border-sky-200 dark:border-sky-700",
+      slate: "border-slate-200 dark:border-slate-700",
+      teal: "border-teal-200 dark:border-teal-700",
+      blue: "border-blue-200 dark:border-blue-700",
+      fuchsia: "border-fuchsia-200 dark:border-fuchsia-700",
+      amber: "border-amber-200 dark:border-amber-700",
+      gray: "border-gray-200 dark:border-gray-700",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getLinkBgClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald:
+        "bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700",
+      red: "bg-red-700 hover:bg-red-800 dark:bg-red-600 dark:hover:bg-red-700",
+      rose: "bg-rose-700 hover:bg-rose-800 dark:bg-rose-600 dark:hover:bg-rose-700",
+      purple:
+        "bg-purple-700 hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700",
+      orange:
+        "bg-orange-700 hover:bg-orange-800 dark:bg-orange-600 dark:hover:bg-orange-700",
+      sky: "bg-sky-700 hover:bg-sky-800 dark:bg-sky-600 dark:hover:bg-sky-700",
+      slate:
+        "bg-slate-700 hover:bg-slate-800 dark:bg-slate-600 dark:hover:bg-slate-700",
+      teal: "bg-teal-700 hover:bg-teal-800 dark:bg-teal-600 dark:hover:bg-teal-700",
+      blue: "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700",
+      fuchsia:
+        "bg-fuchsia-700 hover:bg-fuchsia-800 dark:bg-fuchsia-600 dark:hover:bg-fuchsia-700",
+      amber:
+        "bg-amber-700 hover:bg-amber-800 dark:bg-amber-600 dark:hover:bg-amber-700",
+      gray: "bg-gray-700 hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-700",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getSectionItemBgClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "bg-emerald-50 dark:bg-emerald-900/30",
+      red: "bg-red-50 dark:bg-red-900/30",
+      rose: "bg-rose-50 dark:bg-rose-900/30",
+      purple: "bg-purple-50 dark:bg-purple-900/30",
+      orange: "bg-orange-50 dark:bg-orange-900/30",
+      sky: "bg-sky-50 dark:bg-sky-900/30",
+      slate: "bg-slate-50 dark:bg-slate-900/30",
+      teal: "bg-teal-50 dark:bg-teal-900/30",
+      blue: "bg-blue-50 dark:bg-blue-900/30",
+      fuchsia: "bg-fuchsia-50 dark:bg-fuchsia-900/30",
+      amber: "bg-amber-50 dark:bg-amber-900/30",
+      gray: "bg-gray-50 dark:bg-gray-900/30",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getSectionItemBorderClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "border-emerald-300 dark:border-emerald-700",
+      red: "border-red-300 dark:border-red-700",
+      rose: "border-rose-300 dark:border-rose-700",
+      purple: "border-purple-300 dark:border-purple-700",
+      orange: "border-orange-300 dark:border-orange-700",
+      sky: "border-sky-300 dark:border-sky-700",
+      slate: "border-slate-300 dark:border-slate-700",
+      teal: "border-teal-300 dark:border-teal-700",
+      blue: "border-blue-300 dark:border-blue-700",
+      fuchsia: "border-fuchsia-300 dark:border-fuchsia-700",
+      amber: "border-amber-300 dark:border-amber-700",
+      gray: "border-gray-300 dark:border-gray-700",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function getSectionItemTextClasses(color: string): string {
+    const classes: Record<string, string> = {
+      emerald: "text-emerald-900 dark:text-emerald-100",
+      red: "text-red-900 dark:text-red-100",
+      rose: "text-rose-900 dark:text-rose-100",
+      purple: "text-purple-900 dark:text-purple-100",
+      orange: "text-orange-900 dark:text-orange-100",
+      sky: "text-sky-900 dark:text-sky-100",
+      slate: "text-slate-900 dark:text-slate-100",
+      teal: "text-teal-900 dark:text-teal-100",
+      blue: "text-blue-900 dark:text-blue-100",
+      fuchsia: "text-fuchsia-900 dark:text-fuchsia-100",
+      amber: "text-amber-900 dark:text-amber-100",
+      gray: "text-gray-900 dark:text-gray-100",
+    };
+    return classes[color] || classes.gray;
+  }
+
+  function createBadge(status: string): HTMLElement {
+    const badge = document.createElement("span");
+    badge.className =
+      "px-3 py-1 text-xs font-semibold rounded-full inline-flex items-center gap-1";
+
+    if (status === "CONFIRMED") {
+      badge.classList.add(
+        "bg-green-100",
+        "dark:bg-green-900/30",
+        "text-green-800",
+        "dark:text-green-300"
+      );
+      badge.innerHTML = "<span>✓</span><span>CONFIRMADO</span>";
+    } else if (status === "TENTATIVE") {
+      badge.classList.add(
+        "bg-yellow-100",
+        "dark:bg-yellow-900/30",
+        "text-yellow-800",
+        "dark:text-yellow-300"
+      );
+      badge.innerHTML = "<span>⚠</span><span>TENTATIVO</span>";
+    } else {
+      badge.classList.add(
+        "bg-gray-100",
+        "dark:bg-gray-900/30",
+        "text-gray-800",
+        "dark:text-gray-300"
+      );
+      badge.innerHTML = "<span>?</span><span>POR DETERMINAR</span>";
+    }
+
+    return badge;
+  }
+
+  function createSection(
+    title: string,
+    icon: string,
+    items: string[],
+    color: string
+  ): HTMLElement {
+    const section = document.createElement("div");
+    section.className = "space-y-3";
+
+    const header = document.createElement("h3");
+    header.className =
+      "text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2";
+    header.innerHTML = `<span class="text-2xl">${icon}</span><span>${title}</span>`;
+    section.appendChild(header);
+
+    const list = document.createElement("div");
+    list.className = "space-y-2";
+
+    items.forEach((item) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.className = `${getSectionItemBgClasses(color)} px-4 py-3 rounded-lg border ${getSectionItemBorderClasses(color)}`;
+
+      const text = document.createElement("p");
+      text.className = `${getSectionItemTextClasses(color)} text-sm font-medium`;
+      text.textContent = item;
+
+      itemDiv.appendChild(text);
+      list.appendChild(itemDiv);
+    });
+
+    section.appendChild(list);
+    return section;
+  }
+
+  function renderDayEventsModal(date: string, events: any[]) {
+    const modal = document.getElementById("event-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalContent = document.getElementById("modal-content");
+    const modalHeader = document.getElementById("modal-header");
+
+    if (!modal || !modalTitle || !modalContent || !modalHeader) return;
+
+    // Limpiar contenido anterior
+    modalContent.innerHTML = "";
+
+    // Scroll al inicio
+    const contentContainer = modalContent.parentElement;
+    if (contentContainer) {
+      contentContainer.scrollTop = 0;
+    }
+
+    // Formatear fecha para el título
+    const dateObj = parseISO(date);
+    const formattedDate = format(dateObj, "EEEE d 'de' MMMM, yyyy", {
+      locale: es,
+    });
+    modalTitle.textContent = `Eventos del ${formattedDate}`;
+
+    // Actualizar color del header según el primer evento
+    if (events.length > 0) {
+      const allEvents = getAllEvents();
+      const firstEvent = allEvents.find((e: Event) => e.id === events[0].id);
+      if (firstEvent) {
+        const headerColor = getColor(firstEvent.category);
+
+        // Mapear a clases completas de Tailwind (no dinámicas)
+        const headerBgClass: Record<string, string> = {
+          emerald: "bg-emerald-600 dark:bg-emerald-700",
+          red: "bg-red-600 dark:bg-red-700",
+          rose: "bg-rose-600 dark:bg-rose-700",
+          purple: "bg-purple-600 dark:bg-purple-700",
+          orange: "bg-orange-600 dark:bg-orange-700",
+          sky: "bg-sky-600 dark:bg-sky-700",
+          slate: "bg-slate-600 dark:bg-slate-700",
+          teal: "bg-teal-600 dark:bg-teal-700",
+          blue: "bg-blue-600 dark:bg-blue-700",
+          fuchsia: "bg-fuchsia-600 dark:bg-fuchsia-700",
+          amber: "bg-amber-600 dark:bg-amber-700",
+        };
+
+        const bgClasses =
+          headerBgClass[headerColor] || "bg-blue-600 dark:bg-blue-700";
+        modalHeader.className = `sticky top-0 z-10 ${bgClasses} px-6 py-4 rounded-t-lg flex items-center justify-between`;
+      }
+    }
+
+    // Crear contenedor para todos los eventos
+    const eventsContainer = document.createElement("div");
+    eventsContainer.className = "space-y-6";
+
+    // Renderizar cada evento
+    events.forEach((eventData, index) => {
+      const event = getAllEvents().find((e: Event) => e.id === eventData.id);
+      if (!event) return;
+
+      const color = getColor(event.category);
+
+      // Contenedor del evento
+      const eventDiv = document.createElement("div");
+      eventDiv.className = `border-2 ${getBorderClasses(color)} rounded-xl overflow-hidden ${index > 0 ? "mt-6" : ""}`;
+
+      // Header del evento con color mejorado para contraste
+      const eventHeader = document.createElement("div");
+      eventHeader.className = `${getHeaderBgClasses(color)} px-5 py-3 border-b-2 ${getHeaderBorderClasses(color)}`;
+
+      const eventTitle = document.createElement("h3");
+      eventTitle.className = `text-xl font-bold ${getTitleTextClasses(color)} flex items-center gap-2`;
+
+      // Crear badge de categoría con mejor contraste
+      const categoryBadge = document.createElement("span");
+      categoryBadge.className = `inline-flex items-center px-3 py-1 ${getBadgeBgClasses(color)} text-white text-xs font-semibold rounded-full mr-2 shadow-sm`;
+      categoryBadge.textContent =
+        categoryLabels[event.category] || event.category;
+
+      eventTitle.appendChild(categoryBadge);
+      eventTitle.appendChild(document.createTextNode(event.title));
+      eventHeader.appendChild(eventTitle);
+      eventDiv.appendChild(eventHeader);
+
+      // Contenido del evento
+      const eventContent = document.createElement("div");
+      eventContent.className = "p-5 space-y-4";
+
+      // Status
+      const statusDiv = document.createElement("div");
+      statusDiv.appendChild(createBadge(event.status));
+      eventContent.appendChild(statusDiv);
+
+      // Horario con mejor contraste
+      const timeDiv = document.createElement("div");
+      timeDiv.className = `${getTimeBgClasses(color)} rounded-lg p-4 border ${getTimeBorderClasses(color)}`;
+      const startTime = format(parseISO(event.start), "HH:mm", { locale: es });
+      const endTime = format(parseISO(event.end), "HH:mm", { locale: es });
+      timeDiv.innerHTML = `
+        <div class="flex items-center gap-2 ${getTitleTextClasses(color)} font-semibold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="font-semibold">${startTime} - ${endTime}</span>
+        </div>
+      `;
+      eventContent.appendChild(timeDiv);
+
+      // Descripción
+      if (event.description) {
+        const descDiv = document.createElement("div");
+        descDiv.className = "text-gray-700 dark:text-gray-300";
+        descDiv.innerHTML = `<p class="leading-relaxed">${event.description}</p>`;
+        eventContent.appendChild(descDiv);
+      }
+
+      // Notas
+      if (event.notes) {
+        const notesDiv = document.createElement("div");
+        notesDiv.className =
+          "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-3 rounded-r-lg";
+        notesDiv.innerHTML = `
+          <p class="text-sm text-blue-700 dark:text-blue-300"><strong>💡 Nota:</strong> ${event.notes}</p>
+        `;
+        eventContent.appendChild(notesDiv);
+      }
+
+      // Debuts
+      if (event.debuts && event.debuts.length > 0) {
+        eventContent.appendChild(
+          createSection("Debuts", "⭐", event.debuts, "purple")
+        );
+      }
+
+      // Bonificaciones
+      if (event.bonuses && event.bonuses.length > 0) {
+        eventContent.appendChild(
+          createSection("Bonificaciones", "🎁", event.bonuses, "blue")
+        );
+      }
+
+      // Apariciones
+      if (event.spawns && event.spawns.length > 0) {
+        eventContent.appendChild(
+          createSection("Apariciones", "🌟", event.spawns, "green")
+        );
+      }
+
+      // Incursiones
+      if (event.raids && event.raids.length > 0) {
+        eventContent.appendChild(
+          createSection("Incursiones", "⚔️", event.raids, "red")
+        );
+      }
+
+      // Movimientos Destacados
+      if (event.featuredMoves && event.featuredMoves.length > 0) {
+        eventContent.appendChild(
+          createSection(
+            "Movimientos Destacados",
+            "💫",
+            event.featuredMoves,
+            "indigo"
+          )
+        );
+      }
+
+      // Tareas de Investigación
+      if (event.researchTasks && event.researchTasks.length > 0) {
+        eventContent.appendChild(
+          createSection(
+            "Tareas de Investigación",
+            "🔬",
+            event.researchTasks,
+            "yellow"
+          )
+        );
+      }
+
+      // Enlaces
+      if (event.links && event.links.length > 0) {
+        const linksDiv = document.createElement("div");
+        linksDiv.className = "flex flex-wrap gap-2 mt-3";
+
+        event.links.forEach((link) => {
+          const linkBtn = document.createElement("a");
+          linkBtn.href = link.url;
+          linkBtn.target = "_blank";
+          linkBtn.rel = "noopener noreferrer";
+          linkBtn.className = `inline-flex items-center gap-2 px-3 py-2 ${getLinkBgClasses(color)} text-white rounded-lg transition-colors text-xs font-semibold shadow-sm`;
+          linkBtn.innerHTML = `
+            <span>${link.title}</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          `;
+          linksDiv.appendChild(linkBtn);
+        });
+
+        eventContent.appendChild(linksDiv);
+      }
+
+      eventDiv.appendChild(eventContent);
+      eventsContainer.appendChild(eventDiv);
+    });
+
+    modalContent.appendChild(eventsContainer);
+
+    // Mostrar modal
+    modal.classList.remove("hidden");
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    const modal = document.getElementById("event-modal");
+    const modalContent = document.getElementById("modal-content");
+
+    if (modal) {
+      // Reset scroll position
+      const contentContainer = modalContent?.parentElement;
+      if (contentContainer) {
+        contentContainer.scrollTop = 0;
+      }
+
+      modal.classList.remove("show");
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+  }
+
+  // Event Listeners
+  document.addEventListener("DOMContentLoaded", () => {
+    const closeBtn = document.getElementById("close-modal");
+    const modal = document.getElementById("event-modal");
+
+    closeBtn?.addEventListener("click", closeModal);
+
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeModal();
+      }
+    });
+
+    // Escuchar eventos de tarjetas individuales
+    document.addEventListener("event-selected", ((e: CustomEvent) => {
+      const { eventId } = e.detail;
+      if (eventId) {
+        // Mostrar evento individual como un array de 1
+        const allEvents = getAllEvents();
+        const event = allEvents.find((ev) => ev.id === eventId);
+        if (event) {
+          const today = format(parseISO(event.start), "yyyy-MM-dd");
+          renderDayEventsModal(today, [{ id: event.id }]);
+        }
+      }
+    }) as EventListener);
+
+    // Escuchar clics en días del calendario
+    window.addEventListener("calendar-day-selected", ((e: CustomEvent) => {
+      const { date, events } = e.detail;
+      if (events && events.length > 0) {
+        renderDayEventsModal(date, events);
+      }
+    }) as EventListener);
+  });
+</script>

@@ -1,0 +1,388 @@
+---
+import { getAllEvents, type EventCategory } from "../data/events";
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isToday,
+  parseISO,
+} from "date-fns";
+import { es } from "date-fns/locale";
+
+const currentDate = new Date("2026-01-15"); // Fecha de referencia para el calendario
+const monthStart = startOfMonth(currentDate);
+const monthEnd = endOfMonth(currentDate);
+const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+
+// Obtener el día de la semana del primer día (0 = domingo, 1 = lunes, etc.)
+const firstDayOfWeek = monthStart.getDay();
+
+// Crear array de días incluyendo días vacíos al inicio
+const calendarDays = Array(firstDayOfWeek).fill(null).concat(daysInMonth);
+
+// Obtener TODOS los eventos (incluye children)
+const allEvents = getAllEvents();
+
+// Función para obtener eventos de un día específico
+function getEventsForDay(day: Date) {
+  return allEvents.filter((event) => {
+    const eventStart = parseISO(event.start);
+    const eventEnd = parseISO(event.end);
+    const dayStart = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+    const dayEnd = new Date(
+      day.getFullYear(),
+      day.getMonth(),
+      day.getDate(),
+      23,
+      59,
+      59
+    );
+    return eventStart <= dayEnd && eventEnd >= dayStart;
+  });
+}
+
+// Función para obtener color según categoría de evento
+// Colores optimizados para legibilidad en modo claro y oscuro
+function getEventColor(category: EventCategory) {
+  const colors: Record<EventCategory, string> = {
+    COMMUNITY_DAY: "bg-emerald-600 dark:bg-emerald-500", // Verde brillante legible
+    RAID_DAY: "bg-red-600 dark:bg-red-500", // Rojo legible
+    EVENT: "bg-purple-600 dark:bg-purple-500", // Púrpura legible
+    SPOTLIGHT: "bg-orange-600 dark:bg-orange-500", // Naranja legible
+    RAID_HOUR: "bg-rose-600 dark:bg-rose-500", // Rosa/rojo legible
+    MAX_MONDAY: "bg-sky-600 dark:bg-sky-500", // Azul cielo legible
+    PVP: "bg-blue-700 dark:bg-blue-600", // Azul oscuro legible
+    GO_PASS: "bg-teal-600 dark:bg-teal-500", // Verde azulado legible
+    RAID_ROTATION: "bg-red-600 dark:bg-red-500",
+    MEGA_ROTATION: "bg-fuchsia-600 dark:bg-fuchsia-500", // Fucsia legible
+    SHADOW_ROTATION: "bg-gray-700 dark:bg-gray-600", // Gris legible
+    RESEARCH: "bg-amber-600 dark:bg-amber-500", // Amarillo/ámbar legible
+    OTHER: "bg-gray-600 dark:bg-gray-500",
+  };
+  return colors[category] || "bg-gray-600 dark:bg-gray-500";
+}
+---
+
+<div
+  class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-10 transition-colors"
+>
+  <!-- Header del calendario -->
+  <div class="flex items-center justify-between mb-10">
+    <h2 class="text-4xl font-bold text-gray-900 dark:text-white">
+      {format(currentDate, "MMMM yyyy", { locale: es })}
+    </h2>
+    <div class="flex items-center space-x-2">
+      <button
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <button
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Días de la semana -->
+  <div class="grid grid-cols-7 gap-5 mb-6">
+    {
+      ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"].map((day) => (
+        <div class="text-center text-lg font-bold text-gray-700 dark:text-gray-300 py-4">
+          {day}
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Días del calendario -->
+  <div class="grid grid-cols-7 gap-5">
+    {
+      calendarDays.map((day) => {
+        if (!day) {
+          return <div class="min-h-[280px]" />;
+        }
+
+        const dayEvents = getEventsForDay(day);
+        const isCurrentDay = isToday(day);
+
+        return (
+          <div class="calendar-day-wrapper relative">
+            <div
+              class={`
+              calendar-day min-h-[280px] p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer
+              ${
+                isCurrentDay
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-300 dark:ring-blue-600"
+                  : "border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
+              }
+              ${dayEvents.length > 0 ? "has-events hover:bg-gray-50 dark:hover:bg-gray-700/50" : ""}
+            `}
+              data-day={format(day, "yyyy-MM-dd")}
+              data-has-events={dayEvents.length > 0}
+              data-events={JSON.stringify(
+                dayEvents.map((e) => ({
+                  id: e.id,
+                  title: e.title,
+                  category: e.category,
+                }))
+              )}
+            >
+              <div class="h-full flex flex-col day-content">
+                <span
+                  class={`
+                text-xl font-bold mb-4 day-number
+                ${isCurrentDay ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-300"}
+              `}
+                >
+                  {format(day, "d")}
+                </span>
+
+                {dayEvents.length > 0 && (
+                  <div class="flex-1 flex flex-col gap-2 overflow-y-auto events-container pr-1 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                    {dayEvents.map((event) => (
+                      <div
+                        class={`text-left px-3 py-2 rounded-lg text-sm font-semibold text-white ${getEventColor(event.category)} hover:opacity-90 transition-opacity cursor-pointer shadow-sm event-item pointer-events-none`}
+                        title={`${event.title}\n${format(parseISO(event.start), "HH:mm")} - ${format(parseISO(event.end), "HH:mm")}`}
+                        data-event-id={event.id}
+                      >
+                        <div class="line-clamp-2 leading-tight">
+                          {event.title}
+                        </div>
+                        <div class="text-xs opacity-90 mt-1">
+                          {format(parseISO(event.start), "HH:mm")}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+
+  <!-- Leyenda actualizada con todas las categorías y colores oficiales -->
+  <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+      Tipos de eventos
+    </h3>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-emerald-600"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400"
+          >Community Day</span
+        >
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-red-600"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400">Raid Day</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-purple-600"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400">Evento</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-orange-500"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400"
+          >Spotlight Hour</span
+        >
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400">Raid Hour</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-sky-500"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400">Max Monday</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-blue-700"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400">PVP/GBL</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-teal-400"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400">GO Pass</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400"
+          >Raid Rotation</span
+        >
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-purple-600"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400"
+          >Mega Rotation</span
+        >
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-gray-600"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400"
+          >Shadow/Rocket</span
+        >
+      </div>
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+        <span class="text-xs text-gray-600 dark:text-gray-400">Showcase</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initCalendarClicks() {
+    const calendarDays = document.querySelectorAll(".calendar-day[data-day]");
+    console.log(
+      "Inicializando clicks del calendario, días encontrados:",
+      calendarDays.length
+    );
+
+    calendarDays.forEach((dayElement) => {
+      // Clonar para eliminar listeners previos
+      const newDay = dayElement.cloneNode(true) as HTMLElement;
+      dayElement.parentNode?.replaceChild(newDay, dayElement);
+
+      // Click en el día completo - siempre abre modal con todos los eventos
+      newDay.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const dayDate = newDay.getAttribute("data-day");
+        const eventsData = newDay.getAttribute("data-events");
+        const hasEvents = newDay.getAttribute("data-has-events") === "true";
+
+        console.log("Click en día:", dayDate, "hasEvents:", hasEvents);
+
+        if (eventsData && dayDate && hasEvents) {
+          try {
+            const events = JSON.parse(eventsData);
+            console.log("Eventos del día:", events);
+            if (events.length > 0) {
+              // Siempre mostrar modal con TODOS los eventos del día
+              window.dispatchEvent(
+                new CustomEvent("calendar-day-selected", {
+                  detail: {
+                    date: dayDate,
+                    events: events,
+                  },
+                })
+              );
+            }
+          } catch (err) {
+            console.error("Error parsing events data:", err);
+          }
+        }
+      });
+    });
+  }
+
+  // Ejecutar inmediatamente
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCalendarClicks);
+  } else {
+    initCalendarClicks();
+  }
+
+  // Ejecutar en transiciones de Astro
+  document.addEventListener("astro:page-load", initCalendarClicks);
+</script>
+<style>
+  /* Estado normal del día del calendario */
+  .calendar-day-wrapper {
+    position: relative;
+  }
+
+  .calendar-day {
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Efecto hover: sutil */
+  .calendar-day.has-events:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Transición suave para todos los elementos */
+  .event-item {
+    transition: all 0.2s ease;
+  }
+
+  /* Contenedor de eventos con scroll visible */
+  .events-container {
+    max-height: 210px;
+  }
+
+  /* Estilos para scrollbar visible y atractivo */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(75, 85, 99, 0.5);
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(75, 85, 99, 0.7);
+  }
+
+  /* Asegurar que el grid permita el posicionamiento absoluto */
+  .grid {
+    position: relative;
+  }
+
+  @keyframes pulse-slow {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+</style>
