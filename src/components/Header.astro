@@ -1,78 +1,147 @@
 ---
+
 ---
 
-<header class="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md transition-colors">
-  <nav class="container mx-auto px-4 py-4">
+<header
+  class="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md transition-colors"
+>
+  <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
     <div class="flex items-center justify-between">
       <!-- Logo -->
-      <a href="/" class="flex items-center space-x-3 group">
-        <div class="w-12 h-12 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200 overflow-hidden">
-          <img src="/logo.png" alt="PoGo Calendar Logo" class="w-full h-full object-contain" />
+      <a href="/" class="flex items-center space-x-2 sm:space-x-3 group">
+        <div
+          class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-200 overflow-hidden"
+        >
+          <img
+            src="/logo.png"
+            alt="PoGo Calendar Logo"
+            class="w-full h-full object-contain"
+          />
         </div>
         <div class="flex flex-col">
-          <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+          <span
+            class="text-base sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent"
+          >
             PoGo Calendar
           </span>
-          <span class="text-xs text-gray-500 dark:text-gray-400">
+          <span
+            class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 hidden sm:block"
+          >
             Eventos de Enero 2026
           </span>
         </div>
       </a>
 
-      <!-- Navigation Links -->
-      <div class="hidden md:flex items-center space-x-6">
-        <a href="#calendar" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+      <!-- Navigation Links - Desktop/Tablet -->
+      <div class="hidden lg:flex items-center space-x-4 xl:space-x-6">
+        <a
+          href="#calendar"
+          class="text-sm xl:text-base text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+        >
           Calendario
         </a>
-        <a href="#events" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+        <a
+          href="#events"
+          class="text-sm xl:text-base text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+        >
           Eventos
         </a>
-        <a href="#raids" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+        <a
+          href="#raids"
+          class="text-sm xl:text-base text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+        >
           Raids
         </a>
-        <a href="#weekly" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+        <a
+          href="#weekly"
+          class="text-sm xl:text-base text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+        >
           Semanales
         </a>
       </div>
 
-      <!-- Theme Toggle -->
-      <button
-        id="theme-toggle"
-        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        aria-label="Toggle theme"
-      >
-        <svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <svg class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
+      <!-- Right side buttons -->
+      <div class="flex items-center space-x-2">
+        <!-- Theme Toggle -->
+        <button
+          id="theme-toggle"
+          class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Toggle theme"
+        >
+          <svg
+            class="w-5 h-5 sm:w-6 sm:h-6 hidden dark:block"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            ></path>
+          </svg>
+          <svg
+            class="w-5 h-5 sm:w-6 sm:h-6 block dark:hidden"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            ></path>
+          </svg>
+        </button>
 
-      <!-- Mobile Menu Button -->
-      <button
-        id="mobile-menu-toggle"
-        class="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        aria-label="Toggle menu"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-toggle"
+          class="lg:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Toggle menu"
+        >
+          <svg
+            class="w-5 h-5 sm:w-6 sm:h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden pt-4 pb-2 space-y-2">
-      <a href="#calendar" class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+    <div id="mobile-menu" class="hidden lg:hidden pt-4 pb-2 space-y-2">
+      <a
+        href="#calendar"
+        class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+      >
         Calendario
       </a>
-      <a href="#events" class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+      <a
+        href="#events"
+        class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+      >
         Eventos
       </a>
-      <a href="#raids" class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+      <a
+        href="#raids"
+        class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+      >
         Raids
       </a>
-      <a href="#weekly" class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+      <a
+        href="#weekly"
+        class="block py-2 px-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+      >
         Semanales
       </a>
     </div>
@@ -80,25 +149,46 @@
 </header>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    // Mobile menu toggle
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
+  function initMobileMenu() {
+    const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
 
     if (mobileMenuToggle && mobileMenu) {
-      mobileMenuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
+      // Clonar el botón para eliminar listeners antiguos
+      const newToggle = mobileMenuToggle.cloneNode(true) as HTMLElement;
+      mobileMenuToggle.parentNode?.replaceChild(newToggle, mobileMenuToggle);
+
+      newToggle.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        mobileMenu.classList.toggle("hidden");
       });
 
       // Close mobile menu when clicking a link
-      const mobileLinks = mobileMenu.querySelectorAll('a');
-      mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
+      const mobileLinks = mobileMenu.querySelectorAll("a");
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
         });
       });
-    }
 
-    // Theme toggle is handled in Layout.astro
-  });
+      // Close menu when clicking outside
+      document.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        if (!mobileMenu.contains(target) && !newToggle.contains(target)) {
+          mobileMenu.classList.add("hidden");
+        }
+      });
+    }
+  }
+
+  // Run when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMobileMenu);
+  } else {
+    initMobileMenu();
+  }
+
+  // Run on Astro page transitions
+  document.addEventListener("astro:page-load", initMobileMenu);
 </script>

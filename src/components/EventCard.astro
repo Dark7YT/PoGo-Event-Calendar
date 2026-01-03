@@ -81,13 +81,17 @@ const statusBadge = getStatusBadge(event.status);
   data-event-id={event.id}
 >
   <!-- Header con tipo de evento -->
-  <div class={`${getEventCategoryColor(event.category)} px-6 py-3`}>
-    <div class="flex items-center justify-between">
-      <span class="text-white font-semibold text-sm uppercase tracking-wide">
+  <div
+    class={`${getEventCategoryColor(event.category)} px-4 sm:px-6 py-2.5 sm:py-3`}
+  >
+    <div class="flex items-center justify-between gap-2">
+      <span
+        class="text-white font-semibold text-xs sm:text-sm uppercase tracking-wide line-clamp-1"
+      >
         {getEventCategoryLabel(event.category)}
       </span>
       <span
-        class={`${statusBadge.class} text-xs px-2 py-1 rounded-full font-medium`}
+        class={`${statusBadge.class} text-[10px] sm:text-xs px-2 py-0.5 sm:py-1 rounded-full font-medium whitespace-nowrap flex-shrink-0`}
       >
         {statusBadge.text}
       </span>
@@ -95,49 +99,51 @@ const statusBadge = getStatusBadge(event.status);
   </div>
 
   <!-- Contenido -->
-  <div class="p-6">
+  <div class="p-4 sm:p-6">
     <h3
-      class="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+      class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2"
     >
       {event.title}
     </h3>
 
     <!-- Fechas -->
     <div
-      class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-4 space-x-2"
+      class="flex flex-col sm:flex-row sm:items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3 sm:mb-4 gap-1 sm:gap-0 sm:space-x-2"
     >
-      <svg
-        class="w-4 h-4 flex-shrink-0"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-        ></path>
-      </svg>
-      <span class="line-clamp-1">{startDate}</span>
-      <span>→</span>
-      <span class="line-clamp-1">{endDate}</span>
+      <div class="flex items-center gap-2">
+        <svg
+          class="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          ></path>
+        </svg>
+        <span class="line-clamp-1">{startDate}</span>
+      </div>
+      <span class="hidden sm:inline">→</span>
+      <span class="line-clamp-1 sm:pl-0 pl-7">{endDate}</span>
     </div>
 
     <!-- Descripción -->
     {
       event.description && (
-        <p class="text-gray-700 dark:text-gray-300 mb-4 line-clamp-2">
+        <p class="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 line-clamp-2">
           {event.description}
         </p>
       )
     }
 
     <!-- Badges informativos -->
-    <div class="flex flex-wrap gap-2 mb-4">
+    <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
       {
         event.debuts && event.debuts.length > 0 && (
-          <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs px-3 py-1 rounded-full font-medium">
+          <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium">
             ⭐ {event.debuts.length}{" "}
             {event.debuts.length === 1 ? "Debut" : "Debuts"}
           </span>
@@ -145,7 +151,7 @@ const statusBadge = getStatusBadge(event.status);
       }
       {
         event.bonuses && event.bonuses.length > 0 && (
-          <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs px-3 py-1 rounded-full font-medium">
+          <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium">
             🎁 {event.bonuses.length}{" "}
             {event.bonuses.length === 1 ? "Bonus" : "Bonuses"}
           </span>

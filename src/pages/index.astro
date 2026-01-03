@@ -46,66 +46,66 @@ const raidRotations = calendarDataset.filter(
   <main class="min-h-screen">
     <!-- Hero Section -->
     <section
-      class="relative overflow-hidden text-white py-20 min-h-[500px] flex items-center"
+      class="relative overflow-hidden text-white py-12 sm:py-16 md:py-20 min-h-[400px] sm:min-h-[450px] md:min-h-[500px] flex items-center"
     >
       <!-- Background Image with responsive sources -->
       <div class="absolute inset-0 z-0">
         <picture>
-          <!-- Mobile -->
+          <!-- Mobile (up to 640px) -->
           <source
             media="(max-width: 640px)"
             srcset="/banners/bannerMobile.png"
           />
-          <!-- Tablet -->
+          <!-- Tablet (641px to 1024px) -->
           <source
-            media="(max-width: 1024px)"
+            media="(min-width: 641px) and (max-width: 1024px)"
             srcset="/banners/bannerTablet.png"
           />
-          <!-- Desktop -->
+          <!-- Desktop (1025px+) -->
           <img
             src="/banners/bannerDesktop.png"
             alt="PoGo Calendar Banner"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover object-center"
           />
         </picture>
       </div>
 
       <!-- Dark overlay for better text readability -->
       <div
-        class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40 z-[1]"
+        class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50 z-[1]"
       >
       </div>
 
-      <div class="container mx-auto px-4 relative z-10">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-4xl mx-auto text-center">
           <h1
-            class="text-5xl md:text-6xl font-bold mb-6 animate-fade-in-up drop-shadow-lg"
+            class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 animate-fade-in-up drop-shadow-lg"
           >
             Eventos de Pokémon GO
           </h1>
           <p
-            class="text-xl md:text-2xl mb-4 text-blue-100 animate-fade-in-up animation-delay-200 drop-shadow-md"
+            class="text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 text-blue-100 animate-fade-in-up animation-delay-200 drop-shadow-md"
           >
             Enero 2026
           </p>
           <p
-            class="text-lg text-blue-50 mb-8 animate-fade-in-up animation-delay-300 drop-shadow-md"
+            class="text-sm sm:text-base md:text-lg text-blue-50 mb-6 sm:mb-8 px-4 animate-fade-in-up animation-delay-300 drop-shadow-md"
           >
             Tu fuente confiable para todos los eventos, raids y actividades
             semanales
           </p>
           <div
-            class="flex flex-wrap justify-center gap-4 animate-fade-in-up animation-delay-400"
+            class="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 animate-fade-in-up animation-delay-400 px-4"
           >
             <a
               href="#calendar"
-              class="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg"
+              class="bg-white text-purple-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg text-sm sm:text-base"
             >
               Ver Calendario
             </a>
             <a
               href="#events"
-              class="bg-purple-500/30 backdrop-blur-sm border-2 border-white/50 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-500/50 transition-all transform hover:scale-105"
+              class="bg-purple-500/30 backdrop-blur-sm border-2 border-white/50 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-purple-500/50 transition-all transform hover:scale-105 text-sm sm:text-base"
             >
               Explorar Eventos
             </a>
@@ -116,19 +116,19 @@ const raidRotations = calendarDataset.filter(
 
     <!-- Trust Banner -->
     <section
-      class="bg-gray-50 dark:bg-gray-800/50 py-8 border-b border-gray-200 dark:border-gray-700"
+      class="bg-gray-50 dark:bg-gray-800/50 py-6 sm:py-8 border-b border-gray-200 dark:border-gray-700"
     >
-      <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto">
           <div
-            class="flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left"
+            class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 lg:gap-8 text-center"
           >
             <div class="flex items-center gap-3">
               <div
-                class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center"
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0"
               >
                 <svg
-                  class="w-6 h-6 text-white"
+                  class="w-5 h-5 sm:w-6 sm:h-6 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -140,21 +140,23 @@ const raidRotations = calendarDataset.filter(
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
-              <div>
-                <p class="font-semibold text-gray-900 dark:text-white">
+              <div class="text-left">
+                <p
+                  class="font-semibold text-sm sm:text-base text-gray-900 dark:text-white"
+                >
                   Información Oficial
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   Basado en anuncios de Niantic
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-3">
               <div
-                class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center"
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0"
               >
                 <svg
-                  class="w-6 h-6 text-white"
+                  class="w-5 h-5 sm:w-6 sm:h-6 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -166,21 +168,23 @@ const raidRotations = calendarDataset.filter(
                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
-              <div>
-                <p class="font-semibold text-gray-900 dark:text-white">
+              <div class="text-left">
+                <p
+                  class="font-semibold text-sm sm:text-base text-gray-900 dark:text-white"
+                >
                   Actualizado
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   2 de enero, 2026
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-3">
               <div
-                class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center"
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0"
               >
                 <svg
-                  class="w-6 h-6 text-white"
+                  class="w-5 h-5 sm:w-6 sm:h-6 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -192,11 +196,13 @@ const raidRotations = calendarDataset.filter(
                     d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
               </div>
-              <div>
-                <p class="font-semibold text-gray-900 dark:text-white">
+              <div class="text-left">
+                <p
+                  class="font-semibold text-sm sm:text-base text-gray-900 dark:text-white"
+                >
                   Detalles Completos
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                   Toda la información en un lugar
                 </p>
               </div>
@@ -207,14 +213,18 @@ const raidRotations = calendarDataset.filter(
     </section>
 
     <!-- Calendar Section -->
-    <section id="calendar" class="py-16 bg-white dark:bg-gray-900">
-      <div class="container mx-auto px-4">
+    <section id="calendar" class="py-12 sm:py-16 bg-white dark:bg-gray-900">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-[1800px] mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <div class="text-center mb-8 sm:mb-12">
+            <h2
+              class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4"
+            >
               📅 Calendario de Eventos
             </h2>
-            <p class="text-lg text-gray-600 dark:text-gray-400">
+            <p
+              class="text-base sm:text-lg text-gray-600 dark:text-gray-400 px-4"
+            >
               Visualiza todos los eventos del mes de un vistazo
             </p>
           </div>
@@ -224,26 +234,30 @@ const raidRotations = calendarDataset.filter(
     </section>
 
     <!-- Events Section -->
-    <section id="events" class="py-16 bg-gray-50 dark:bg-gray-800/50">
-      <div class="container mx-auto px-4">
+    <section id="events" class="py-12 sm:py-16 bg-gray-50 dark:bg-gray-800/50">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <div class="text-center mb-8 sm:mb-12">
+            <h2
+              class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4"
+            >
               🎉 Eventos Principales
             </h2>
-            <p class="text-lg text-gray-600 dark:text-gray-400">
+            <p
+              class="text-base sm:text-lg text-gray-600 dark:text-gray-400 px-4"
+            >
               Todos los eventos de enero con detalles completos
             </p>
           </div>
 
           {
             activeEvents.length > 0 && (
-              <div class="mb-12">
-                <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                  <span class="w-3 h-3 bg-green-500 rounded-full mr-3 animate-pulse" />
+              <div class="mb-10 sm:mb-12">
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center">
+                  <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full mr-2 sm:mr-3 animate-pulse" />
                   Eventos Activos
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                   {activeEvents.map((event) => (
                     <EventCard event={event} />
                   ))}
@@ -254,10 +268,10 @@ const raidRotations = calendarDataset.filter(
 
           <div>
             <h3
-              class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center"
+              class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center"
             >
               <svg
-                class="w-6 h-6 mr-3 text-blue-500"
+                class="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-blue-500 flex-shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
