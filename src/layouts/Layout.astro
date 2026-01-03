@@ -1,12 +1,15 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = "Tu fuente confiable para eventos de Pokémon GO - Calendario completo, detalles de eventos y más" } = Astro.props;
+const {
+  title,
+  description = "Tu fuente confiable para eventos de Pokémon GO - Calendario completo, detalles de eventos y más",
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -19,63 +22,88 @@ const { title, description = "Tu fuente confiable para eventos de Pokémon GO - 
     <link rel="apple-touch-icon" href="/logo.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    
+
     <!-- Theme handling script - runs before page load -->
     <script is:inline>
       const theme = (() => {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-          return localStorage.getItem('theme');
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
         }
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
         }
-        return 'light';
+        return "light";
       })();
-      
-      if (theme === 'light') {
-        document.documentElement.classList.remove('dark');
+
+      if (theme === "light") {
+        document.documentElement.classList.remove("dark");
       } else {
-        document.documentElement.classList.add('dark');
+        document.documentElement.classList.add("dark");
       }
       window.__theme = theme;
     </script>
   </head>
-  <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
+  <body
+    class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200"
+  >
     <slot />
-    
+
     <script is:inline>
       // Theme toggle functionality
       function initThemeToggle() {
-        const themeToggle = document.getElementById('theme-toggle');
-        
+        console.log("🎨 Inicializando theme toggle...");
+        const themeToggle = document.getElementById("theme-toggle");
+        console.log("🔍 Botón encontrado:", themeToggle);
+
         if (themeToggle) {
           // Remove any existing listeners
           const newToggle = themeToggle.cloneNode(true);
           themeToggle.parentNode.replaceChild(newToggle, themeToggle);
-          
-          newToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.contains('dark');
-            
+          console.log("✅ Botón clonado y reemplazado");
+
+          newToggle.addEventListener("click", () => {
+            console.log("🖱️ Click detectado en theme toggle");
+            const isDark = document.documentElement.classList.contains("dark");
+            console.log("🌓 Estado actual:", isDark ? "OSCURO" : "CLARO");
+
             if (isDark) {
-              document.documentElement.classList.remove('dark');
-              localStorage.setItem('theme', 'light');
+              document.documentElement.classList.remove("dark");
+              localStorage.setItem("theme", "light");
+              console.log("☀️ Cambiado a modo CLARO");
             } else {
-              document.documentElement.classList.add('dark');
-              localStorage.setItem('theme', 'dark');
+              document.documentElement.classList.add("dark");
+              localStorage.setItem("theme", "dark");
+              console.log("🌙 Cambiado a modo OSCURO");
             }
+            console.log(
+              "📦 Tema guardado en localStorage:",
+              localStorage.getItem("theme")
+            );
           });
+          console.log("👂 Event listener agregado");
+        } else {
+          console.error("❌ No se encontró el botón theme-toggle");
         }
       }
-      
+
       // Run when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initThemeToggle);
+      console.log("📄 Estado del documento:", document.readyState);
+      if (document.readyState === "loading") {
+        console.log("⏳ Esperando DOMContentLoaded...");
+        document.addEventListener("DOMContentLoaded", initThemeToggle);
       } else {
+        console.log("✨ DOM ya está listo, inicializando...");
         initThemeToggle();
       }
-      
+
       // Run on Astro page transitions
-      document.addEventListener('astro:page-load', initThemeToggle);
+      document.addEventListener("astro:page-load", () => {
+        console.log("🔄 Astro page-load detectado");
+        initThemeToggle();
+      });
     </script>
   </body>
 </html>
