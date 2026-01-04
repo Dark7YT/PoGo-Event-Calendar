@@ -225,12 +225,13 @@
     }
 
     .animate-modal-appear {
-    animation: modal-appear 0.15s ease-out;
-    will-change: transform, opacity;
-  }
+      animation: modal-appear 0.15s ease-out;
+      will-change: transform, opacity;
+    }
 
-  .animate-modal-appear::after {
-    will-change: auto;
+    .animate-modal-appear::after {
+      will-change: auto;
+    }
 
     #export-modal.show {
       display: flex;
@@ -242,7 +243,9 @@
     }
 
     .export-event-item {
-      transition: background-color 0.15s ease, border-color 0.15s ease;
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
     }
 
     .export-event-item:hover {
@@ -734,13 +737,15 @@
     window.addEventListener("DOMContentLoaded", () => {
       initExportModal();
 
-      // Listener para botón de exportar
+      // Listener para botón de exportar (usando clase para soportar múltiples botones)
       document.addEventListener("click", (e) => {
         const target = e.target as HTMLElement;
-        if (
-          target.id === "open-export-modal" ||
-          target.closest("#open-export-modal")
-        ) {
+        const button = target.closest(".open-export-modal");
+
+        if (button) {
+          e.preventDefault();
+          e.stopPropagation();
+
           const modal = document.getElementById("export-modal");
           if (modal) {
             modal.classList.add("show");
