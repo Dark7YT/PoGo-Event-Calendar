@@ -140,16 +140,31 @@ import { es } from "date-fns/locale";
 
     // Filtrar eventos que están activos hoy
     const todayEvents = allEvents.filter((event) => {
-      const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
-      const todayDate = new Date(todayStr);
+      const eventStart = parseISO(event.start);
+      const eventEnd = parseISO(event.end);
 
-      // Normalizar las fechas a medianoche para comparación
-      eventStart.setHours(0, 0, 0, 0);
-      eventEnd.setHours(23, 59, 59, 999);
-      todayDate.setHours(0, 0, 0, 0);
+      // Crear fechas normalizadas para comparación (solo día, sin hora)
+      const eventStartDay = new Date(
+        eventStart.getFullYear(),
+        eventStart.getMonth(),
+        eventStart.getDate()
+      );
+      const eventEndDay = new Date(
+        eventEnd.getFullYear(),
+        eventEnd.getMonth(),
+        eventEnd.getDate(),
+        23,
+        59,
+        59
+      );
+      const todayDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
 
-      return todayDate >= eventStart && todayDate <= eventEnd;
+      // Verificar si hoy está dentro del rango del evento
+      return eventStartDay <= todayDate && todayDate <= eventEndDay;
     });
 
     // Renderizar el contenedor
