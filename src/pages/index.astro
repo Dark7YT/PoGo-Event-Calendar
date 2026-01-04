@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
+import TodayEvents from "../components/TodayEvents.astro";
 import Calendar from "../components/Calendar.astro";
 import EventCard from "../components/EventCard.astro";
 import EventModal from "../components/EventModal.astro";
@@ -212,6 +213,9 @@ const raidRotations = calendarDataset.filter(
         </div>
       </div>
     </section>
+
+    <!-- Today's Events Section -->
+    <TodayEvents />
 
     <!-- Calendar Section -->
     <section id="calendar" class="py-12 sm:py-16 bg-white dark:bg-gray-900">
