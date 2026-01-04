@@ -117,8 +117,6 @@ function getEventColor(category: EventCategory) {
         const dayEvents = getEventsForDay(day);
         if (dayEvents.length === 0) return null;
 
-        const isCurrentDay = isToday(day);
-
         // Contar cuántos días con eventos hay antes de este
         const daysWithEventsBefore = daysInMonth
           .slice(0, index)
@@ -131,28 +129,17 @@ function getEventColor(category: EventCategory) {
           <div
             class={`mobile-day-item mb-4 p-4 rounded-lg border-2 transition-all duration-300 ${
               isInitiallyHidden ? "hidden" : ""
-            } ${
-              isCurrentDay
-                ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50"
-            }`}
+            } border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50`}
             data-initially-hidden={isInitiallyHidden}
+            data-date={format(day, "yyyy-MM-dd")}
           >
             <div class="flex items-center justify-between mb-3">
-              <h3
-                class={`text-lg font-bold ${
-                  isCurrentDay
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-900 dark:text-white"
-                }`}
-              >
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white mobile-day-title">
                 {format(day, "EEEE d", { locale: es })}
               </h3>
-              {isCurrentDay && (
-                <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-500 text-white">
-                  Hoy
-                </span>
-              )}
+              <span class="mobile-today-badge hidden text-xs font-semibold px-2 py-1 rounded-full bg-blue-500 text-white">
+                Hoy
+              </span>
             </div>
             <div class="space-y-2">
               {dayEvents.map((event) => (
@@ -247,21 +234,16 @@ function getEventColor(category: EventCategory) {
           }
 
           const dayEvents = getEventsForDay(day);
-          const isCurrentDay = isToday(day);
 
           return (
             <div class="calendar-day-wrapper relative">
               <div
                 class={`
-              calendar-day min-h-[80px] sm:min-h-[120px] md:min-h-[200px] lg:min-h-[280px] p-2 sm:p-3 md:p-4 lg:p-5 rounded-lg sm:rounded-xl border-2 transition-all duration-300 cursor-pointer
-              ${
-                isCurrentDay
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-300 dark:ring-blue-600"
-                  : "border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
-              }
+              calendar-day min-h-[80px] sm:min-h-[120px] md:min-h-[200px] lg:min-h-[280px] p-2 sm:p-3 md:p-4 lg:p-5 rounded-lg sm:rounded-xl border-2 transition-all duration-300 cursor-pointer border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500
               ${dayEvents.length > 0 ? "has-events hover:bg-gray-50 dark:hover:bg-gray-700/50" : ""}
             `}
                 data-day={format(day, "yyyy-MM-dd")}
+                data-date={format(day, "yyyy-MM-dd")}
                 data-has-events={dayEvents.length > 0}
                 data-events={JSON.stringify(
                   dayEvents.map((e) => ({
@@ -272,12 +254,7 @@ function getEventColor(category: EventCategory) {
                 )}
               >
                 <div class="h-full flex flex-col day-content">
-                  <span
-                    class={`
-                text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1 sm:mb-2 md:mb-3 lg:mb-4 day-number
-                ${isCurrentDay ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-300"}
-              `}
-                  >
+                  <span class="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1 sm:mb-2 md:mb-3 lg:mb-4 day-number text-gray-700 dark:text-gray-300">
                     {format(day, "d")}
                   </span>
 
@@ -434,6 +411,70 @@ function getEventColor(category: EventCategory) {
 </div>
 
 <script>
+  function highlightToday() {
+    // Obtener la fecha actual del cliente en formato YYYY-MM-DD
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
+    // Vista de GRID (desktop/tablet)
+    const calendarDays = document.querySelectorAll(".calendar-day[data-date]");
+    calendarDays.forEach((dayElement) => {
+      const dayDate = dayElement.getAttribute("data-date");
+      if (dayDate === todayStr) {
+        // Agregar clases de "hoy"
+        dayElement.classList.add(
+          "border-blue-500",
+          "bg-blue-50",
+          "dark:bg-blue-900/20",
+          "ring-2",
+          "ring-blue-300",
+          "dark:ring-blue-600"
+        );
+        dayElement.classList.remove("border-gray-200", "dark:border-gray-700");
+
+        // Resaltar el número del día
+        const dayNumber = dayElement.querySelector(".day-number");
+        if (dayNumber) {
+          dayNumber.classList.add("text-blue-600", "dark:text-blue-400");
+          dayNumber.classList.remove("text-gray-700", "dark:text-gray-300");
+        }
+      }
+    });
+
+    // Vista de LISTA (móvil)
+    const mobileDays = document.querySelectorAll(".mobile-day-item[data-date]");
+    mobileDays.forEach((dayElement) => {
+      const dayDate = dayElement.getAttribute("data-date");
+      if (dayDate === todayStr) {
+        // Agregar clases de "hoy"
+        dayElement.classList.add(
+          "border-blue-500",
+          "bg-blue-50",
+          "dark:bg-blue-900/20"
+        );
+        dayElement.classList.remove(
+          "border-gray-200",
+          "dark:border-gray-700",
+          "bg-gray-50",
+          "dark:bg-gray-700/50"
+        );
+
+        // Resaltar el título
+        const dayTitle = dayElement.querySelector(".mobile-day-title");
+        if (dayTitle) {
+          dayTitle.classList.add("text-blue-600", "dark:text-blue-400");
+          dayTitle.classList.remove("text-gray-900", "dark:text-white");
+        }
+
+        // Mostrar badge "Hoy"
+        const todayBadge = dayElement.querySelector(".mobile-today-badge");
+        if (todayBadge) {
+          todayBadge.classList.remove("hidden");
+        }
+      }
+    });
+  }
+
   function initCalendarClicks() {
     // Manejar clicks en la vista de GRID (tablet/desktop)
     const calendarDays = document.querySelectorAll(".calendar-day[data-day]");
@@ -565,13 +606,20 @@ function getEventColor(category: EventCategory) {
 
   // Ejecutar inmediatamente
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initCalendarClicks);
+    document.addEventListener("DOMContentLoaded", () => {
+      highlightToday();
+      initCalendarClicks();
+    });
   } else {
+    highlightToday();
     initCalendarClicks();
   }
 
   // Ejecutar en transiciones de Astro
-  document.addEventListener("astro:page-load", initCalendarClicks);
+  document.addEventListener("astro:page-load", () => {
+    highlightToday();
+    initCalendarClicks();
+  });
 </script>
 <style>
   /* Estado normal del día del calendario */
