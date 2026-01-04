@@ -43,24 +43,24 @@ function getEventsForDay(day: Date) {
 }
 
 // Función para obtener color según categoría de evento
-// Colores optimizados para legibilidad en modo claro y oscuro
+// Colores que coinciden exactamente con la leyenda
 function getEventColor(category: EventCategory) {
   const colors: Record<EventCategory, string> = {
-    COMMUNITY_DAY: "bg-emerald-600 dark:bg-emerald-500", // Verde brillante legible
-    RAID_DAY: "bg-red-600 dark:bg-red-500", // Rojo legible
-    EVENT: "bg-purple-600 dark:bg-purple-500", // Púrpura legible
-    SPOTLIGHT: "bg-orange-600 dark:bg-orange-500", // Naranja legible
-    RAID_HOUR: "bg-rose-600 dark:bg-rose-500", // Rosa/rojo legible
-    MAX_MONDAY: "bg-sky-600 dark:bg-sky-500", // Azul cielo legible
-    PVP: "bg-blue-700 dark:bg-blue-600", // Azul oscuro legible
-    GO_PASS: "bg-teal-600 dark:bg-teal-500", // Verde azulado legible
-    RAID_ROTATION: "bg-red-600 dark:bg-red-500",
-    MEGA_ROTATION: "bg-fuchsia-600 dark:bg-fuchsia-500", // Fucsia legible
-    SHADOW_ROTATION: "bg-gray-700 dark:bg-gray-600", // Gris legible
-    RESEARCH: "bg-amber-600 dark:bg-amber-500", // Amarillo/ámbar legible
-    OTHER: "bg-gray-600 dark:bg-gray-500",
+    COMMUNITY_DAY: "bg-emerald-600",
+    RAID_DAY: "bg-red-600",
+    EVENT: "bg-purple-600",
+    SPOTLIGHT: "bg-orange-500",
+    RAID_HOUR: "bg-red-500",
+    MAX_MONDAY: "bg-sky-500",
+    PVP: "bg-blue-700",
+    GO_PASS: "bg-teal-400",
+    RAID_ROTATION: "bg-red-500",
+    MEGA_ROTATION: "bg-purple-600",
+    SHADOW_ROTATION: "bg-gray-600",
+    RESEARCH: "bg-amber-500",
+    OTHER: "bg-gray-500",
   };
-  return colors[category] || "bg-gray-600 dark:bg-gray-500";
+  return colors[category] || "bg-gray-500";
 }
 ---
 
